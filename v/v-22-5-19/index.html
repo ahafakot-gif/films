@@ -31,7 +31,8 @@ video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:
  font:inherit;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--panel)}
 .btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.btn.back{min-height:40px;padding:8px 14px}[hidden]{display:none!important}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}a.card{text-decoration:none;color:inherit}.mh{margin:8px 0 10px;font-size:20px;font-weight:600}
+.btn.back{min-height:40px;padding:8px 14px}[hidden]{display:none!important}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .card img{width:100%;aspect-ratio:1200/630;object-fit:cover;display:block}
@@ -42,12 +43,28 @@ footer a{color:var(--gold)}
 </style></head><body><div class="wrap">
 <div class="top"><div class="brand">אליעזר הפקות</div><a class="btn back" id="back" hidden>→ חזרה · Back</a></div>
 <h1 dir="auto">אביטל ותומר 22.5.19</h1>
-<script>(function(){var a=new URLSearchParams(location.search).get('a');if(a&&/^[a-z0-9-]{1,80}$/.test(a)){var b=document.getElementById('back');b.href='../../a/'+a+'/';b.hidden=false;}})();</script>
+
 <video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e"></video>
 <div class="row">
   <a class="btn gold" href="https://www.dropbox.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e&amp;dl=1">⬇ הורדה · Download</a>
   <button type="button" class="btn" id="fs">⛶ מסך מלא · Full screen</button>
 </div>
+<div id="more" hidden><h2 class="mh">עוד סרטונים · More videos</h2><div class="grid" id="moregrid"></div></div>
+<script>(function(){
+  var me="", a=new URLSearchParams(location.search).get('a');
+  if(!(a&&/^[a-z0-9-]{1,80}$/.test(a))) return;
+  var b=document.getElementById('back'); b.href='../../a/'+a+'/'; b.hidden=false;
+  var myId=location.pathname.split('/').filter(Boolean).pop();
+  fetch('../../a/'+a+'/list.json').then(function(r){return r.json();}).then(function(list){
+    var g=document.getElementById('moregrid'), n=0;
+    list.forEach(function(it){ if(it.id===myId||!/^[a-z0-9-]+$/.test(it.id)) return; n++;
+      var c=document.createElement('a'); c.className='card'; c.href='../'+it.id+'/?a='+a;
+      var im=document.createElement('img'); im.src='../'+it.id+'/cover.jpg'; im.alt=''; im.loading='lazy'; c.appendChild(im);
+      var t=document.createElement('div'); t.className='in t'; t.dir='auto'; t.textContent='▶ '+it.name; c.appendChild(t);
+      g.appendChild(c); });
+    if(n) document.getElementById('more').hidden=false;
+  }).catch(function(){});
+})();</script>
 <script>
 document.getElementById('fs').addEventListener('click',function(){
   var v=document.querySelector('video');
