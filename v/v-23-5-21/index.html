@@ -31,6 +31,7 @@ video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:
  font:inherit;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--panel)}
 .btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.btn.back{min-height:40px;padding:8px 14px}[hidden]{display:none!important}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
 .card img{width:100%;aspect-ratio:1200/630;object-fit:cover;display:block}
@@ -39,8 +40,9 @@ video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:
 footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 footer a{color:var(--gold)}
 </style></head><body><div class="wrap">
-<div class="brand">אליעזר הפקות</div>
+<div class="top"><div class="brand">אליעזר הפקות</div><a class="btn back" id="back" hidden>→ חזרה · Back</a></div>
 <h1 dir="auto">חתונה דניאלה ורונן 23.5.21</h1>
+<script>(function(){var a=new URLSearchParams(location.search).get('a');if(a&&/^[a-z0-9-]{1,80}$/.test(a)){var b=document.getElementById('back');b.href='../../a/'+a+'/';b.hidden=false;}})();</script>
 <video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fi/job5d9lzlglng6ed3m9o2/23.5.21.mp4?rlkey=psa08g4mbnyn47a1buq2oahmb"></video>
 <div class="row">
   <a class="btn gold" href="https://www.dropbox.com/scl/fi/job5d9lzlglng6ed3m9o2/23.5.21.mp4?rlkey=psa08g4mbnyn47a1buq2oahmb&amp;dl=1">⬇ הורדה · Download</a>
