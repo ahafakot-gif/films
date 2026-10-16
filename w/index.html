@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>אליעזר הפקות · Watch &amp; Download</title>
+<title>Eliezer Productions · Watch &amp; Download</title>
 <meta name="robots" content="noindex,nofollow">
-<meta name="description" content="צפייה והורדה · Watch &amp; Download">
+<meta name="description" content="Watch &amp; Download">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="אליעזר הפקות">
-<meta property="og:title" content="אליעזר הפקות · צפייה והורדה">
-<meta property="og:description" content="Watch &amp; Download">
+<meta property="og:site_name" content="Eliezer Productions">
+<meta property="og:title" content="אליעזר הפקות · Eliezer Productions">
+<meta property="og:description" content="צפייה והורדה · Watch &amp; Download">
 <meta property="og:image" content="https://ahafakot-gif.github.io/films/cover-default.jpg">
 <meta property="og:image:secure_url" content="https://ahafakot-gif.github.io/films/cover-default.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -21,43 +21,56 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap">
 <style>
 :root{--bg:#100e0a;--panel:#1a1711;--fg:#f3eee3;--muted:#a79f8c;--line:#2e2a20;--gold:#d6ad55;--gold-ink:#17120a}
-*{box-sizing:border-box}html,body{margin:0}
+*{box-sizing:border-box}html,body{margin:0}[hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font-family:"Rubik",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.45;
  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:980px;margin:0 auto;padding-block:20px 40px;display:flex;flex-direction:column;gap:18px}
+.wrap{max-width:980px;margin:0 auto;padding-block:20px 40px;display:flex;flex-direction:column;gap:16px}
 .brand{color:var(--gold);font-weight:600;letter-spacing:.02em;font-size:15px}
 h1{margin:0;font-size:clamp(22px,4.5vw,34px);font-weight:700;text-wrap:balance}
-h2{margin:0;font-size:clamp(18px,3.6vw,24px);font-weight:600;overflow-wrap:anywhere}
-.item{display:flex;flex-direction:column;gap:12px}
-.item+.item{border-top:1px solid var(--line);padding-top:22px}
+.mh{margin:8px 0 10px;font-size:20px;font-weight:600;overflow-wrap:anywhere}
 video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;display:block}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 18px;border-radius:10px;
  font:inherit;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--panel)}
 .btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
+.btn.sm{min-height:40px;padding:8px 14px;font-size:15px}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.photos{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
-.photos .ic{width:56px;height:56px;border-radius:12px;background:var(--gold);display:grid;place-items:center}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:12px;padding:10px 12px;flex-wrap:wrap}
+.item.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.pick{flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;color:inherit;font:inherit;cursor:pointer;text-align:start;padding:4px 0}
+.pick .pl{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--gold);display:grid;place-items:center}
+.pick .t{font-weight:600;font-size:17px;overflow-wrap:anywhere;min-width:0}
+.photos{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.photos .ic{width:52px;height:52px;border-radius:12px;background:var(--gold);display:grid;place-items:center}
+.photos .t{font-weight:600;font-size:18px;overflow-wrap:anywhere}
 .muted{color:var(--muted);font-size:14px}
 footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">אליעזר הפקות</div>
-  <h1 id="title" dir="auto">צפייה והורדה · Watch &amp; Download</h1>
-  <div id="items"></div>
-  <footer><span>אליעזר הפקות · Eliezer Productions</span><span dir="ltr">+972-50-6611106</span></footer>
+  <div class="brand" id="brand">אליעזר הפקות</div>
+  <h1 id="title" dir="auto"></h1>
+  <div id="vbox" hidden>
+    <h2 class="mh" id="now" dir="auto"></h2>
+    <video id="player" controls playsinline preload="metadata"></video>
+    <div class="row" style="margin-top:12px">
+      <a class="btn gold" id="dl"></a>
+      <button type="button" class="btn" id="fs"></button>
+    </div>
+  </div>
+  <div id="listbox" hidden><h2 class="mh" id="allh"></h2><div class="list" id="list"></div></div>
+  <div id="files"></div>
+  <p class="muted" id="bad" hidden></p>
+  <footer><span id="foot">אליעזר הפקות · Eliezer Productions</span><span dir="ltr">+972-50-6611106</span></footer>
 </div>
 <script>
 (function(){
   function decode(s){
-    try{
-      s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='=';
-      var bin=atob(s), bytes=new Uint8Array(bin.length);
-      for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-      return JSON.parse(new TextDecoder().decode(bytes));
-    }catch(e){ return null; }
+    try{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='=';
+      var bin=atob(s), b=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++) b[i]=bin.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(b)); }catch(e){ return null; }
   }
   var okPath=/^\/(scl\/fi|scl\/fo|s|sh)\/[^?#\s]+$/;
   function clean(it){
@@ -65,42 +78,61 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
     var r=(typeof it.r==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(it.r))?it.r:'';
     return {n:String(it.n||'').slice(0,160), t:it.t==='f'?'f':'v', p:it.p, r:r};
   }
-  var params=new URLSearchParams(location.search);
-  var data=decode(params.get('d')||'');
-  var list=(data&&Array.isArray(data.i)?data.i:[]).map(clean).filter(Boolean).slice(0,40);
-  var box=document.getElementById('items');
-  if(data&&typeof data.h==='string'&&data.h) {document.getElementById('title').textContent=data.h.slice(0,160);}
-  else if(list.length===1&&list[0].n){document.getElementById('title').textContent=list[0].n;}
-  if(document.getElementById('title').textContent) document.title=document.getElementById('title').textContent+' | אליעזר הפקות';
-  if(!list.length){ var m=document.createElement('p'); m.className='muted'; m.textContent='הקישור לא תקין · This link is not valid'; box.appendChild(m); return; }
-  function el(tag,cls,text){var e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; return e;}
-  list.forEach(function(it){
-    var q=it.r?('?rlkey='+encodeURIComponent(it.r)):'';
-    var dl='https://www.dropbox.com'+it.p+(q?q+'&dl=1':'?dl=1');
-    var wrap=el('div','item');
-    if(list.length>1&&it.n){ var h=el('h2',null,it.n); h.dir='auto'; wrap.appendChild(h); }
-    if(it.t==='v'){
-      var v=document.createElement('video'); v.controls=true; v.playsInline=true; v.preload='metadata';
-      v.src='https://dl.dropboxusercontent.com'+it.p+q; wrap.appendChild(v);
-      var row=el('div','row');
-      var a=el('a','btn gold','⬇ הורדה · Download'); a.href=dl; row.appendChild(a);
-      var fs=el('button','btn','⛶ מסך מלא · Full screen'); fs.type='button';
-      fs.addEventListener('click',function(){ var p=v.play(); if(p&&p.catch)p.catch(function(){});
-        if(v.requestFullscreen) v.requestFullscreen().catch(function(){ if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); });
-        else if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); else if(v.webkitRequestFullscreen) v.webkitRequestFullscreen(); });
-      row.appendChild(fs); wrap.appendChild(row);
-    } else {
-      var ph=el('div','photos');
-      var ic=el('div','ic'); ic.innerHTML='<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#17120a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-8 8"/></svg>';
-      ph.appendChild(ic);
-      ph.appendChild(el('div',null,'קבצים · Files'));
-      var row2=el('div','row');
-      var view=el('a','btn gold','👁 לצפייה · View'); view.href='https://www.dropbox.com'+it.p+(q?q+'&dl=0':'?dl=0'); view.target='_blank'; view.rel='noopener';
-      var all=el('a','btn','⬇ להורדת הכל · Download all'); all.href=dl;
-      row2.appendChild(view); row2.appendChild(all); ph.appendChild(row2);
-      wrap.appendChild(ph);
+  var data=decode(new URLSearchParams(location.search).get('d')||'')||{};
+  var EN=data.l==='en';
+  var T=EN?{brand:'Eliezer Productions',dl:'⬇ Download',fs:'⛶ Full screen',all:'All videos',files:'Files',view:'📂 Open folder',dlall:'⬇ Download all',hint:'In the folder you can view and download each file',bad:'This link is not valid',def:'Watch & Download',foot:'Eliezer Productions'}
+          :{brand:'אליעזר הפקות',dl:'⬇ הורדה · Download',fs:'⛶ מסך מלא · Full screen',all:'כל הסרטונים · All videos',files:'קבצים · Files',view:'📂 פתיחת התיקייה · Open folder',dlall:'⬇ להורדת הכל · Download all',hint:'בתיקייה אפשר לצפות ולהוריד כל קובץ בנפרד · In the folder you can view and download each file',bad:'הקישור לא תקין · This link is not valid',def:'צפייה והורדה · Watch & Download',foot:'אליעזר הפקות · Eliezer Productions'};
+  if(EN){ document.documentElement.lang='en'; document.documentElement.dir='ltr'; }
+  function $(id){return document.getElementById(id);}
+  $('brand').textContent=T.brand; $('foot').textContent=T.foot;
+  var list=(Array.isArray(data.i)?data.i:[]).map(clean).filter(Boolean).slice(0,40);
+  var vids=list.filter(function(x){return x.t==='v';}), folders=list.filter(function(x){return x.t==='f';});
+  var title=(typeof data.h==='string'&&data.h)?data.h.slice(0,160):(list.length===1&&list[0].n?list[0].n:T.def);
+  $('title').textContent=title; document.title=title+' | '+T.brand;
+  if(!list.length){ $('bad').textContent=T.bad; $('bad').hidden=false; return; }
+  function q(it){return it.r?('?rlkey='+encodeURIComponent(it.r)):'';}
+  function dlUrl(it){var s=q(it); return 'https://www.dropbox.com'+it.p+(s?s+'&dl=1':'?dl=1');}
+  function playUrl(it){return 'https://dl.dropboxusercontent.com'+it.p+q(it);}
+  var v=$('player'), rows=[];
+  $('dl').textContent=T.dl; $('fs').textContent=T.fs; $('allh').textContent=T.all;
+  function show(i,play){
+    var it=vids[i]; if(!it) return;
+    if(v.getAttribute('src')!==playUrl(it)) v.src=playUrl(it);
+    $('now').textContent=it.n||''; $('dl').href=dlUrl(it);
+    rows.forEach(function(r,k){ r.classList.toggle('on',k===i); });
+    if(play){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+  if(vids.length){
+    $('vbox').hidden=false;
+    if(vids.length>1){
+      $('listbox').hidden=false;
+      vids.forEach(function(it,k){
+        var row=document.createElement('div'); row.className='item';
+        var b=document.createElement('button'); b.type='button'; b.className='pick';
+        b.innerHTML='<span class="pl"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z" fill="#17120a"/></svg></span>';
+        var t=document.createElement('span'); t.className='t'; t.dir='auto'; t.textContent=it.n||('#'+(k+1)); b.appendChild(t);
+        b.addEventListener('click',function(){ show(k,true); });
+        var a=document.createElement('a'); a.className='btn sm'; a.href=dlUrl(it); a.textContent=T.dl;
+        row.appendChild(b); row.appendChild(a); $('list').appendChild(row); rows.push(row);
+      });
     }
-    box.appendChild(wrap);
+    show(0,false);
+    $('fs').addEventListener('click',function(){
+      var p=v.play(); if(p&&p.catch)p.catch(function(){});
+      if(v.requestFullscreen) v.requestFullscreen().catch(function(){ if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); });
+      else if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); else if(v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+    });
+  }
+  folders.forEach(function(it){
+    var s=q(it), box=document.createElement('div'); box.className='photos';
+    box.innerHTML='<div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#17120a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>';
+    var t=document.createElement('div'); t.className='t'; t.dir='auto'; t.textContent=T.files+(it.n?' — '+it.n:''); box.appendChild(t);
+    var row=document.createElement('div'); row.className='row';
+    var a1=document.createElement('a'); a1.className='btn gold'; a1.href=dlUrl(it); a1.textContent=T.dlall;
+    var a2=document.createElement('a'); a2.className='btn'; a2.href='https://www.dropbox.com'+it.p+(s?s+'&dl=0':'?dl=0'); a2.target='_blank'; a2.rel='noopener'; a2.textContent=T.view;
+    row.appendChild(a1); row.appendChild(a2); box.appendChild(row);
+    var h=document.createElement('div'); h.className='muted'; h.textContent=T.hint; box.appendChild(h);
+    $('files').appendChild(box);
   });
 })();
 </script>
