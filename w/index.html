@@ -81,8 +81,8 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
   }
   var data=decode(new URLSearchParams(location.search).get('d')||'')||{};
   var EN=data.l==='en';
-  var T=EN?{brand:'Eliezer Productions',dl:'⬇ Download',fs:'⛶ Full screen',all:'All videos',files:'Files',view:'📂 Open folder',dlall:'⬇ Download all',hint:'In the folder you can view and download each file',bad:'This link is not valid',def:'Watch & Download',foot:'Eliezer Productions'}
-          :{brand:'אליעזר הפקות',dl:'⬇ הורדה · Download',fs:'⛶ מסך מלא · Full screen',all:'כל הסרטונים · All videos',files:'קבצים · Files',view:'📂 פתיחת התיקייה · Open folder',dlall:'⬇ להורדת הכל · Download all',hint:'בתיקייה אפשר לצפות ולהוריד כל קובץ בנפרד · In the folder you can view and download each file',bad:'הקישור לא תקין · This link is not valid',def:'צפייה והורדה · Watch & Download',foot:'אליעזר הפקות · Eliezer Productions'};
+  var T=EN?{brand:'Eliezer Productions',dl:'⬇ Download',fs:'⛶ Full screen',all:'All videos',files:'Files',view:'📂 Open folder',dlall:'⬇ Download all',hint:'Everything downloads as one ZIP file',bad:'This link is not valid',def:'Watch & Download',foot:'Eliezer Productions'}
+          :{brand:'אליעזר הפקות',dl:'⬇ הורדה · Download',fs:'⛶ מסך מלא · Full screen',all:'כל הסרטונים · All videos',files:'קבצים · Files',view:'📂 פתיחת התיקייה · Open folder',dlall:'⬇ להורדת הכל · Download all',hint:'הכל יורד כקובץ ZIP אחד · Everything downloads as one ZIP file',bad:'הקישור לא תקין · This link is not valid',def:'צפייה והורדה · Watch & Download',foot:'אליעזר הפקות · Eliezer Productions'};
   if(EN){ document.documentElement.lang='en'; document.documentElement.dir='ltr'; }
   function $(id){return document.getElementById(id);}
   $('brand').textContent=T.brand; $('foot').textContent=T.foot;
@@ -136,8 +136,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
     var row=document.createElement('div'); row.className='row';
     var a1=document.createElement('a'); a1.className='btn gold'; a1.href=dlUrl(it); a1.textContent=T.dlall;
     a1.addEventListener('click',function(){ window.__trk('download',it.n||'folder',it.p); });
-    var a2=document.createElement('a'); a2.className='btn'; a2.href='https://www.dropbox.com'+it.p+(s?s+'&dl=0':'?dl=0'); a2.target='_blank'; a2.rel='noopener'; a2.textContent=T.view;
-    row.appendChild(a1); row.appendChild(a2); box.appendChild(row);
+    row.appendChild(a1); box.appendChild(row);
     var h=document.createElement('div'); h.className='muted'; h.textContent=T.hint; box.appendChild(h);
     $('files').appendChild(box);
   });
