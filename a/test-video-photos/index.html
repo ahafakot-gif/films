@@ -32,7 +32,7 @@ video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:
 .btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}a.card{text-decoration:none;color:inherit}
-button.card{font:inherit;color:inherit;text-align:start;padding:0;cursor:pointer}button.card .t{display:block;padding:12px 14px;font-weight:600}
+button.pick{font:inherit;color:inherit;text-align:start;padding:0;margin:0;border:0;background:none;cursor:pointer;display:block;width:100%}button.pick img{width:100%;aspect-ratio:1200/630;object-fit:cover;display:block}button.pick .t{display:block;padding:12px 14px 6px;font-weight:600;font-size:17px;overflow-wrap:anywhere}.cdl{padding:4px 14px 14px}.btn.sm{min-height:40px;padding:8px 14px;font-size:15px}
 .card.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}.mh{margin:8px 0 10px;font-size:20px;font-weight:600}
 .btn.back{min-height:40px;padding:8px 14px}[hidden]{display:none!important}
 .photos{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;margin-top:8px}.photos .ic{width:52px;height:52px;border-radius:12px;background:var(--gold);display:grid;place-items:center}.photos .t{font-weight:600;font-size:18px}.muted{color:var(--muted);font-size:14px}
@@ -53,8 +53,9 @@ footer a{color:var(--gold)}
   <button type="button" class="btn" id="fs">⛶ מסך מלא · Full screen</button>
 </div>
 <h2 class="mh">כל הסרטונים · All videos</h2>
-<div class="grid"><button type="button" class="card pick" data-i="0"><img src="../../v/v-david-2-8-23-clip/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ בר מצווה דוד 2.8.23 תקציר</span></button></div>
+<div class="grid"><div class="card"><button type="button" class="pick" data-i="0"><img src="../../v/v-david-2-8-23-clip/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ בר מצווה דוד 2.8.23 תקציר</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/nx9dcko3tbv9v40vnsqtc/AEacwtlZ3H0Clj18adttew0/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%93%D7%95%D7%93%202.8.23%20%D7%AA%D7%A7%D7%A6%D7%99%D7%A8.mp4?rlkey=hx96zwfjymr6628jrsfzdmsc6&amp;dl=1">⬇ הורדה · Download</a></div></div></div>
 <div class="photos"><div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#17120a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-8 8"/></svg></div>
 <div class="t" dir="auto">תמונות · Photos</div>
 <div class="row"><a class="btn gold" href="https://www.dropbox.com/scl/fo/kl1giwug8ka18lqldiwr2/AAN6k8ssEnbiiCEqHzllnI4?rlkey=qqfgc2y04y9phc7dqyjvj1iwa&amp;dl=1">⬇ להורדת כל התמונות · Download all</a>
@@ -69,7 +70,7 @@ footer a{color:var(--gold)}
     var it=L[i]; if(!it) return;
     if(v.getAttribute('src')!==it.play){ v.src=it.play; v.poster='../../v/'+it.id+'/cover.jpg'; }
     now.textContent=it.name; dl.href=it.dl;
-    cards.forEach(function(c,k){ c.classList.toggle('on', k===i); });
+    cards.forEach(function(c,k){ c.parentNode.classList.toggle('on', k===i); });
     if(play){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); window.scrollTo({top:0,behavior:'smooth'}); }
     if(history.replaceState) history.replaceState(null,'','#'+it.id);
   }

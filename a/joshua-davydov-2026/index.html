@@ -32,7 +32,7 @@ video{width:100%;max-width:100%;aspect-ratio:16/9;background:#000;border-radius:
 .btn.gold{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}
 .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}a.card{text-decoration:none;color:inherit}
-button.card{font:inherit;color:inherit;text-align:start;padding:0;cursor:pointer}button.card .t{display:block;padding:12px 14px;font-weight:600}
+button.pick{font:inherit;color:inherit;text-align:start;padding:0;margin:0;border:0;background:none;cursor:pointer;display:block;width:100%}button.pick img{width:100%;aspect-ratio:1200/630;object-fit:cover;display:block}button.pick .t{display:block;padding:12px 14px 6px;font-weight:600;font-size:17px;overflow-wrap:anywhere}.cdl{padding:4px 14px 14px}.btn.sm{min-height:40px;padding:8px 14px;font-size:15px}
 .card.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}.mh{margin:8px 0 10px;font-size:20px;font-weight:600}
 .btn.back{min-height:40px;padding:8px 14px}[hidden]{display:none!important}
 .photos{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;margin-top:8px}.photos .ic{width:52px;height:52px;border-radius:12px;background:var(--gold);display:grid;place-items:center}.photos .t{font-weight:600;font-size:18px}.muted{color:var(--muted);font-size:14px}
@@ -53,12 +53,17 @@ footer a{color:var(--gold)}
   <button type="button" class="btn" id="fs">⛶ Full screen</button>
 </div>
 <h2 class="mh">All videos</h2>
-<div class="grid"><button type="button" class="card pick" data-i="0"><img src="../../v/j-celebration-hl/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ Bar Mitzvah Celebration - Highlights</span></button><button type="button" class="card pick" data-i="1"><img src="../../v/j-aliyah-hl/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ Aliyah LaTorah at the Western Wall - Highlights</span></button><button type="button" class="card pick" data-i="2"><img src="../../v/j-slideshow/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ Joshua&#x27;s Slideshow</span></button><button type="button" class="card pick" data-i="3"><img src="../../v/j-aliyah/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ Aliyah LaTorah at the Western Wall - Full Video</span></button><button type="button" class="card pick" data-i="4"><img src="../../v/j-celebration/cover.jpg" alt="" loading="lazy">
-<span class="in t" dir="auto">▶ Bar Mitzvah Celebration - Full Video</span></button></div>
+<div class="grid"><div class="card"><button type="button" class="pick" data-i="0"><img src="../../v/j-celebration-hl/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ Bar Mitzvah Celebration - Highlights</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/APHZIkDBmKTDF_uC9MmxNZo/Bar%20Mitzvah%20Celebration%20-%20Highlights%20-%20Joshua%20Davydov%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a></div></div><div class="card"><button type="button" class="pick" data-i="1"><img src="../../v/j-aliyah-hl/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ Aliyah LaTorah at the Western Wall - Highlights</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AI8RvTA5OXRkGoENH2-3QhI/Aliyah%20LaTorah%20at%20the%20Western%20Wall%20-%20Highlights%20-%20Joshua%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a></div></div><div class="card"><button type="button" class="pick" data-i="2"><img src="../../v/j-slideshow/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ Joshua&#x27;s Slideshow</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a></div></div><div class="card"><button type="button" class="pick" data-i="3"><img src="../../v/j-aliyah/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ Aliyah LaTorah at the Western Wall - Full Video</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AM41na6qz-BiFxB_riR_Syk/Aliyah%20LaTorah%20at%20the%20Western%20Wall%20-%20Joshua%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a></div></div><div class="card"><button type="button" class="pick" data-i="4"><img src="../../v/j-celebration/cover.jpg" alt="" loading="lazy">
+<span class="t" dir="auto">▶ Bar Mitzvah Celebration - Full Video</span></button>
+<div class="cdl"><a class="btn sm" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AGDt3m8F1aeoSRaPk2YmP6c/Bar%20Mitzvah%20Celebration%20-%20Joshua%20Davydov%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a></div></div></div>
 
 <script>
 (function(){
@@ -69,7 +74,7 @@ footer a{color:var(--gold)}
     var it=L[i]; if(!it) return;
     if(v.getAttribute('src')!==it.play){ v.src=it.play; v.poster='../../v/'+it.id+'/cover.jpg'; }
     now.textContent=it.name; dl.href=it.dl;
-    cards.forEach(function(c,k){ c.classList.toggle('on', k===i); });
+    cards.forEach(function(c,k){ c.parentNode.classList.toggle('on', k===i); });
     if(play){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); window.scrollTo({top:0,behavior:'smooth'}); }
     if(history.replaceState) history.replaceState(null,'','#'+it.id);
   }
