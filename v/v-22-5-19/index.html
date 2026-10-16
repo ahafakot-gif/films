@@ -47,11 +47,15 @@ footer a{color:var(--gold)}
 <div class="top"><div class="brand">אליעזר הפקות</div><a class="btn back" id="back" hidden>→ חזרה · Back</a></div>
 <h1 dir="auto">אביטל ותומר 22.5.19</h1>
 
-<video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e"></video>
+<video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e" id="vp"></video>
 <div class="row">
-  <a class="btn gold" href="https://www.dropbox.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e&amp;dl=1">⬇ הורדה · Download</a>
+  <a class="btn gold" href="https://www.dropbox.com/scl/fi/kgoeis6yti9x1yj2p7ezc/22.5.19.mp4?rlkey=ocbkvkyv8a5vzo53lnueuv93e&amp;dl=1" id="vdl">⬇ הורדה · Download</a>
   <button type="button" class="btn" id="fs">⛶ מסך מלא · Full screen</button>
 </div>
+<script>window.__trk=function(kind,video,vkey){try{if(/[?&]nostat/.test(location.search))return;fetch("https://ndelumxaknembkdulbfl.supabase.co/rest/v1/events",{method:'POST',keepalive:true,headers:{'apikey':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Authorization':'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({page:"v/v-22-5-19",kind:kind,video:video||null,vkey:vkey||null})}).catch(function(){});}catch(e){}};window.__trk('open');</script>
+<script>(function(){var nm="\u05d0\u05d1\u05d9\u05d8\u05dc \u05d5\u05ea\u05d5\u05de\u05e8 22.5.19",k="",p=false;
+document.getElementById('vp').addEventListener('play',function(){if(!p){p=true;window.__trk('play',nm,k);}});
+document.getElementById('vdl').addEventListener('click',function(){window.__trk('download',nm,k);});})();</script>
 <div id="more" hidden><h2 class="mh">עוד סרטונים · More videos</h2><div class="grid" id="moregrid"></div></div>
 <script>(function(){
   var me="", a=new URLSearchParams(location.search).get('a');

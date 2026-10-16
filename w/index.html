@@ -65,6 +65,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
   <p class="muted" id="bad" hidden></p>
   <footer><span id="foot">אליעזר הפקות · Eliezer Productions</span><span dir="ltr">+972-50-6611106</span></footer>
 </div>
+<script>window.__trk=function(kind,video,vkey){try{if(/[?&]nostat/.test(location.search))return;fetch("https://ndelumxaknembkdulbfl.supabase.co/rest/v1/events",{method:'POST',keepalive:true,headers:{'apikey':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Authorization':'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({page:"w",kind:kind,video:video||null,vkey:vkey||null})}).catch(function(){});}catch(e){}};</script>
 <script>
 (function(){
   function decode(s){
@@ -90,13 +91,15 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
   var title=(typeof data.h==='string'&&data.h)?data.h.slice(0,160):(list.length===1&&list[0].n?list[0].n:T.def);
   $('title').textContent=title; document.title=title+' | '+T.brand;
   if(!list.length){ $('bad').textContent=T.bad; $('bad').hidden=false; return; }
+  window.__trk('open',null,list[0].p);
+  var cur=0, played={};
   function q(it){return it.r?('?rlkey='+encodeURIComponent(it.r)):'';}
   function dlUrl(it){var s=q(it); return 'https://www.dropbox.com'+it.p+(s?s+'&dl=1':'?dl=1');}
   function playUrl(it){return 'https://dl.dropboxusercontent.com'+it.p+q(it);}
   var v=$('player'), rows=[];
   $('dl').textContent=T.dl; $('fs').textContent=T.fs; $('allh').textContent=T.all;
   function show(i,play){
-    var it=vids[i]; if(!it) return;
+    var it=vids[i]; if(!it) return; cur=i;
     if(v.getAttribute('src')!==playUrl(it)) v.src=playUrl(it);
     $('now').textContent=it.n||''; $('dl').href=dlUrl(it);
     rows.forEach(function(r,k){ r.classList.toggle('on',k===i); });
@@ -113,10 +116,13 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
         var t=document.createElement('span'); t.className='t'; t.dir='auto'; t.textContent=it.n||('#'+(k+1)); b.appendChild(t);
         b.addEventListener('click',function(){ show(k,true); });
         var a=document.createElement('a'); a.className='btn sm'; a.href=dlUrl(it); a.textContent=T.dl;
+        a.addEventListener('click',function(){ window.__trk('download',it.n,it.p); });
         row.appendChild(b); row.appendChild(a); $('list').appendChild(row); rows.push(row);
       });
     }
     show(0,false);
+    v.addEventListener('play',function(){ var it=vids[cur]; if(it&&!played[cur]){ played[cur]=1; window.__trk('play',it.n,it.p); } });
+    $('dl').addEventListener('click',function(){ var it=vids[cur]; if(it) window.__trk('download',it.n,it.p); });
     $('fs').addEventListener('click',function(){
       var p=v.play(); if(p&&p.catch)p.catch(function(){});
       if(v.requestFullscreen) v.requestFullscreen().catch(function(){ if(v.webkitEnterFullscreen) v.webkitEnterFullscreen(); });
@@ -129,6 +135,7 @@ footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);paddin
     var t=document.createElement('div'); t.className='t'; t.dir='auto'; t.textContent=T.files+(it.n?' — '+it.n:''); box.appendChild(t);
     var row=document.createElement('div'); row.className='row';
     var a1=document.createElement('a'); a1.className='btn gold'; a1.href=dlUrl(it); a1.textContent=T.dlall;
+    a1.addEventListener('click',function(){ window.__trk('download',it.n||'folder',it.p); });
     var a2=document.createElement('a'); a2.className='btn'; a2.href='https://www.dropbox.com'+it.p+(s?s+'&dl=0':'?dl=0'); a2.target='_blank'; a2.rel='noopener'; a2.textContent=T.view;
     row.appendChild(a1); row.appendChild(a2); box.appendChild(row);
     var h=document.createElement('div'); h.className='muted'; h.textContent=T.hint; box.appendChild(h);

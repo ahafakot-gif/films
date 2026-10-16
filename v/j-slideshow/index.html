@@ -47,11 +47,15 @@ footer a{color:var(--gold)}
 <div class="top"><div class="brand">Eliezer Productions</div><a class="btn back" id="back" hidden>← Back</a></div>
 <h1 dir="auto">Joshua&#x27;s Slideshow</h1>
 
-<video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt"></video>
+<video controls playsinline preload="metadata" poster="cover.jpg" src="https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt" id="vp"></video>
 <div class="row">
-  <a class="btn gold" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1">⬇ Download</a>
+  <a class="btn gold" href="https://www.dropbox.com/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt&amp;dl=1" id="vdl">⬇ Download</a>
   <button type="button" class="btn" id="fs">⛶ Full screen</button>
 </div>
+<script>window.__trk=function(kind,video,vkey){try{if(/[?&]nostat/.test(location.search))return;fetch("https://ndelumxaknembkdulbfl.supabase.co/rest/v1/events",{method:'POST',keepalive:true,headers:{'apikey':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Authorization':'Bearer '+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kZWx1bXhha25lbWJrZHVsYmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMzU2MjYsImV4cCI6MjEwNzcxMTYyNn0.x7Nc6mAu93Xv0kTxBYwmSh4g8xDYw_pW3RVmccNYwJ8",'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({page:"v/j-slideshow",kind:kind,video:video||null,vkey:vkey||null})}).catch(function(){});}catch(e){}};window.__trk('open');</script>
+<script>(function(){var nm="Joshua's Slideshow",k="/scl/fo/s91f4inxn4fkzis6hmo6k/AKozMoVR2lfAN0ytpOkBqHI/Joshua%27s%20Slideshow.mp4",p=false;
+document.getElementById('vp').addEventListener('play',function(){if(!p){p=true;window.__trk('play',nm,k);}});
+document.getElementById('vdl').addEventListener('click',function(){window.__trk('download',nm,k);});})();</script>
 <div id="more" hidden><h2 class="mh">More videos</h2><div class="grid" id="moregrid"></div></div>
 <script>(function(){
   var me="", a=new URLSearchParams(location.search).get('a');
