@@ -251,6 +251,16 @@ legend small{display:block;font-family:var(--body);font-size:15px;font-weight:40
 .summary li b{font-weight:500;color:var(--muted)}
 .hr{height:1px;background:var(--line)}
 
+/* wall prints */
+.enl{display:grid;gap:12px}
+.enl-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) auto auto;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--gold);border-radius:10px;padding:12px}
+.enl-row select{min-height:44px}
+.qty{display:flex;align-items:center;gap:8px}
+.qty output{min-width:28px;text-align:center;font:700 18px var(--body);font-variant-numeric:tabular-nums}
+.qty .btn{min-width:44px;padding:0;font-size:20px}
+.enl>.btn{justify-self:start}
+@media (max-width:560px){.enl-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.enl-row .qty{justify-content:flex-start}}
+
 /* lightbox */
 dialog.lb{padding:0;border:0;background:transparent;max-width:100vw;max-height:100svh;width:100%;height:100%;margin:0}
 dialog.lb::backdrop{background:var(--shade)}
@@ -543,7 +553,7 @@ he:{
   how_h2:'ארבעה צעדים עד האלבום',
   s1:'שיחת היכרות',s1_p:'בודקים את התאריך, מבינים מה חשוב לכם ובונים חבילה שמתאימה לאירוע.',
   s2:'יום האירוע',s2_p:'מגיעים מוקדם, מכירים את המקום ומצלמים את כל הרגעים החשובים.',
-  s3:'בחירת תמונות',s3_p:'מקבלים את כל התמונות בגלריה אונליין ובוחרים בעצמכם את התמונות לאלבום.',
+  s3:'בחירת תמונות',s3_p:'מקבלים את כל התמונות הערוכות בגלריה אונליין (עם אפשרות הורדה) ובוחרים בעצמכם את התמונות לאלבום.',
   s4:'עיצוב ומסירה',s4_p:'מעצבים את האלבום מהתמונות שבחרתם ומוסרים אלבום מודפס, סרט וקליפ.',
   ct_h2:'בואו נבדוק אם התאריך פנוי',ct_p:'ממלאים את הטופס, והפרטים נשלחים אלינו בוואטסאפ. אפשר גם להתקשר.',
   area:'חולון ומרכז הארץ. גם רחוק יותר, בתיאום.',
@@ -555,7 +565,7 @@ he:{
   err_name:'נא לכתוב שם.',err_tel:'נא לכתוב מספר טלפון מלא, למשל 052-123-4567.',
   back:'→ כל האירועים',ev_btn:'להרכבת חבילה',gal_h2:'תמונות מהאירועים',
   b_h2:'בחרו מה אתם צריכים',b_p:'מסמנים את מה שמתאים לכם, ואנחנו חוזרים אליכם עם מחיר לכל החבילה.',
-  sum_h3:'הבחירה שלכם',ev_send:'שליחת הבחירה בוואטסאפ',
+  sum_h3:'הבחירה שלכם',enl_add:'+ הוספת הגדלה',pcs:"יח'",enl_add_more:'+ עוד הגדלה',enl_del:'הסרה',enl_size:'גודל',enl_mat:'סוג',enl_more:'עוד אחת',enl_less:'אחת פחות',cm:'ס"מ',ev_send:'שליחת הבחירה בוואטסאפ',
   wa_aria:'שליחת הודעה בוואטסאפ',lb_close:'סגירה',lb_prev:'התמונה הקודמת',lb_next:'התמונה הבאה',
   ft_channel:'ערוץ הוואטסאפ',ft_area:'חולון, מרכז הארץ',footer:'© אליעזר הפקות, צילום אירועים',
   toast_file:'פתחו את הקובץ ולחצו "הוספה לאנשי קשר". תודה!',
@@ -586,7 +596,7 @@ ru:{
   how_h2:'Четыре шага до альбома',
   s1:'Знакомство',s1_p:'Проверяем дату, узнаём, что для вас важно, и подбираем пакет под ваш праздник.',
   s2:'День праздника',s2_p:'Приезжаем заранее, знакомимся с залом и снимаем все главные моменты.',
-  s3:'Выбор фото',s3_p:'Вы получаете все фото в онлайн-галерее и сами выбираете снимки для альбома.',
+  s3:'Выбор фото',s3_p:'Вы получаете все обработанные фото в онлайн-галерее (их можно скачать) и сами выбираете снимки для альбома.',
   s4:'Дизайн и выдача',s4_p:'Делаем альбом из выбранных фото и отдаём печатный альбом, фильм и клип.',
   ct_h2:'Проверим, свободна ли ваша дата',ct_p:'Заполните форму, и она придёт нам в WhatsApp. Можно и просто позвонить.',
   area:'Холон и центр страны. Дальше по договорённости.',
@@ -598,7 +608,7 @@ ru:{
   err_name:'Пожалуйста, напишите имя.',err_tel:'Напишите номер полностью, например 052-123-4567.',
   back:'← Все мероприятия',ev_btn:'Собрать пакет',gal_h2:'Фото с праздников',
   b_h2:'Выберите, что вам нужно',b_p:'Отметьте то, что подходит, и мы пришлём цену за весь пакет.',
-  sum_h3:'Ваш выбор',ev_send:'Отправить выбор в WhatsApp',
+  sum_h3:'Ваш выбор',enl_add:'+ Добавить фото на стену',pcs:'шт.',enl_add_more:'+ Ещё одно',enl_del:'Убрать',enl_size:'Размер',enl_mat:'Материал',enl_more:'Больше',enl_less:'Меньше',cm:'см',ev_send:'Отправить выбор в WhatsApp',
   wa_aria:'Написать в WhatsApp',lb_close:'Закрыть',lb_prev:'Предыдущее фото',lb_next:'Следующее фото',
   ft_channel:'WhatsApp-канал',ft_area:'Холон, центр страны',footer:'© Элиэзер Афакот, фото и видео мероприятий',
   toast_file:'Откройте файл и нажмите «Добавить в контакты». Спасибо!',
@@ -629,7 +639,7 @@ en:{
   how_h2:'Four steps to your album',
   s1:'First call',s1_p:'We check the date, learn what matters to you and put together a package for your event.',
   s2:'The big day',s2_p:'We arrive early, get to know the venue and capture every important moment.',
-  s3:'Choosing photos',s3_p:'You get all the photos in an online gallery and pick your favourites for the album.',
+  s3:'Choosing photos',s3_p:'You get all the edited photos in an online gallery (you can download them) and pick your favourites for the album.',
   s4:'Design & delivery',s4_p:'We design the album from your picks and deliver the printed album, film and clip.',
   ct_h2:'Let’s check if your date is free',ct_p:'Fill in the form and it reaches us on WhatsApp. Or just give us a call.',
   area:'Holon and central Israel. Further away by arrangement.',
@@ -641,7 +651,7 @@ en:{
   err_name:'Please enter your name.',err_tel:'Please enter a full phone number, e.g. 052-123-4567.',
   back:'← All events',ev_btn:'Build your package',gal_h2:'Photos from our events',
   b_h2:'Choose what you need',b_p:'Tick what suits you and we’ll get back to you with one price for the whole package.',
-  sum_h3:'Your selection',ev_send:'Send my selection on WhatsApp',
+  sum_h3:'Your selection',enl_add:'+ Add a wall print',pcs:'pcs',enl_add_more:'+ Another one',enl_del:'Remove',enl_size:'Size',enl_mat:'Material',enl_more:'One more',enl_less:'One less',cm:'cm',ev_send:'Send my selection on WhatsApp',
   wa_aria:'Message us on WhatsApp',lb_close:'Close',lb_prev:'Previous photo',lb_next:'Next photo',
   ft_channel:'WhatsApp channel',ft_area:'Holon, central Israel',footer:'© Eliezer Hafakot, event photography',
   toast_file:'Open the file and tap “Add to contacts”. Thank you!',
@@ -666,11 +676,11 @@ const DRONE=[L('צילומי רחף','Съёмка с дрона','Drone shots')
 const HIGHLIGHT=[L('קליפ היילייטס','Клип-хайлайт','Highlight clip'),L('3 עד 5 דקות עם הרגעים הכי יפים','От 3 до 5 минут самых красивых моментов','3 to 5 minutes of the best moments')];
 const USB=[L('דיסק און קי','Флешка','USB drive'),L('כל התמונות והסרטים לשמירה','Все фото и фильмы на память','All photos and films to keep')];
 const EXTRAS=(arr)=>({id:'extras',label:L('תוספות','Дополнительно','Extras'),hint:L('אפשר לבחור כמה','Можно выбрать несколько','Choose as many as you like'),type:'check',opts:arr});
-const PORTRAIT={id:'portrait',label:L('תמונה לקיר','Портрет на стену','Wall portrait'),type:'radio',none:0,opts:[
-  [L('ללא','Не нужно','None')],
-  [L('הגדלה על קנבס','Портрет на холсте','Canvas print'),L('50×70 ס"מ','50×70 см','50×70 cm')],
-  [L('הגדלה על זכוכית','Портрет на стекле','Glass print')]]};
-const DIGITAL=[L('אלבום דיגיטלי','Цифровой альбом','Digital album'),L('כל התמונות הערוכות בקישור להורדה','Все обработанные фото по ссылке','All edited photos via a download link')];
+const ENL={id:'enl',type:'enl',label:L('הגדלות לקיר','Фото на стену (увеличение)','Wall prints'),hint:L('בוחרים גודל, סוג וכמה יחידות. אפשר להוסיף כמה הגדלות','Выберите размер, материал и сколько штук. Можно добавить несколько','Pick size, material and how many. You can add several')};
+const ENL_SIZES=['20×30','30×40','40×60','50×70','60×90','70×100'];
+const ENL_MAT=[L('קנבס','Холст','Canvas'),L('זכוכית','Стекло','Glass'),L('נייר צילום במסגרת','Фотобумага в рамке','Framed photo print')];
+const enlState={};
+const DIGITAL=[L('אלבום דיגיטלי מודפס','Печатный «дигитальный» альбом','Printed digital album'),L('אלבום מודפס ומעוצב, עד 300 תמונות','Настоящий печатный альбом с дизайном, до 300 фото','A real designed printed album, up to 300 photos')];
 const POCKET=[L('אלבום כיסים','Альбом с кармашками','Slip-in album'),L('כ-200 תמונות מודפסות','Около 200 напечатанных фото','About 200 prints')];
 const ALB_LABEL=L('אלבומים','Альбомы','Albums'),ALB_HINT=L('אפשר לבחור כמה','Можно выбрать несколько','Choose as many as you like');
 
@@ -686,7 +696,7 @@ const EVENTS={
       {id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[
         [L('אלבום גדול לזוג','Большой альбом для пары','Large album for the couple'),L('אלבום מעוצב ומודפס','Дизайнерский печатный альбом','A designed, printed album')],
         [L('אלבומים קטנים להורים','Маленькие альбомы для родителей','Small albums for the parents')],DIGITAL,POCKET]},
-      PORTRAIT]},
+      ENL]},
   barmitzvah:{img:'bar-2',title:L('בר ובת מצווה','Бар- и бат-мицва','Bar & Bat Mitzvah'),tag:L('בר / בת מצווה','Бар/бат-мицва','Bar/Bat Mitzvah'),
     intro:L('העלייה לתורה, צילומי חוץ בטבע, אלבום בוק מעוצב וכל הרגעים מהאירוע.','Алия к Торе, съёмка на природе, альбом-бук и все главные моменты праздника.','Called to the Torah, an outdoor shoot, a designed book album and every highlight of the party.'),
     gallery:['bar-2','bar-3','bar-1','bar-5','bar-4','bar-6','bat-1','bat-2','bat-3','bat-4','bat-5'],
@@ -701,21 +711,21 @@ const EVENTS={
       {id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[
         [L('אלבום בוק','Альбом-бук','Book album'),L('אלבום מעוצב מצילומי החוץ','Дизайнерский альбом с фотосессии на природе','A designed album from the outdoor shoot')],
         [L('אלבום גדול מהאירוע','Большой альбом праздника','Large event album')],DIGITAL,POCKET]},
-      PORTRAIT]},
+      ENL]},
   brit:{img:'brit-2',title:L('בריתות','Брит-мила','Brit Milah'),tag:L('ברית','Брит-мила','Brit Milah'),
     intro:L('צילום עדין ומהיר של הברית והסעודה, בלי להפריע למשפחה.','Бережная и быстрая съёмка брита и трапезы. Не мешаем семье.','Gentle, quick coverage of the brit and the meal, without getting in the family’s way.'),
     gallery:['brit-1','brit-2','brit-3','brit-4','brit-5'],
-    groups:[PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]}]},
+    groups:[PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]},ENL]},
   hina:{img:'hina-1',title:L('חינות','Хина','Henna'),tag:L('חינה','Хина','Henna'),
     intro:L('הלבוש המסורתי, הטקס, המשפחה והריקודים. ערב שכולו צבע.','Традиционные наряды, обряд, семья и танцы. Вечер, полный красок.','Traditional dress, the ceremony, family and dancing. An evening full of colour.'),
     gallery:['hina-1','hina-2','hina-3','hina-4','hina-5'],
-    groups:[PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]}]},
+    groups:[PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]},ENL]},
   event:{img:'sheva-2',title:L('שבע ברכות ואירועים','Шева брахот и праздники','Sheva Brachot & more'),tag:L('אירוע','Мероприятие','Event'),
     intro:L('שבע ברכות, ימי הולדת וערבים משפחתיים. תמונות מוכנות לשיתוף.','Шева брахот, дни рождения и семейные вечера. Фото, которыми приятно поделиться.','Sheva brachot, birthdays and family evenings. Photos ready to share.'),
     gallery:['sheva-1','sheva-2','sheva-3','sheva-4','sheva-5','sheva-6','sheva-7'],
     groups:[
       {id:'kind',label:L('סוג האירוע','Праздник','Celebration'),type:'radio',opts:[[L('שבע ברכות','Шева брахот','Sheva Brachot')],[L('יום הולדת','День рождения','Birthday')],[L('אירוע אחר','Другое','Other')]]},
-      PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]}]}
+      PHOTOG,VIDEO,EXTRAS([HIGHLIGHT,USB]),{id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[DIGITAL,POCKET]},ENL]}
 };
 
 /* language */
@@ -850,6 +860,7 @@ function renderBuilder(key,keep){
   EVENTS[key].groups.forEach(gr=>{
     const fs=document.createElement('fieldset');
     fs.innerHTML=`<legend>${gr.label[lang]}${gr.hint?`<small>${gr.hint[lang]}</small>`:''}</legend>`;
+    if(gr.type==='enl'){fs.appendChild(renderEnl(key));box.appendChild(fs);return}
     const opts=document.createElement('div');opts.className='opts';
     gr.opts.forEach(([name,sub],i)=>{
       const id=`${key}-${gr.id}-${i}`,l=document.createElement('label');l.className='opt';l.htmlFor=id;
@@ -861,8 +872,36 @@ function renderBuilder(key,keep){
   if(was) was.forEach(([id,c])=>{const el=$(id);if(el)el.checked=c});
   box.onchange=()=>{updateSummary();$('ev-done').hidden=true};updateSummary();
 }
+function sizeLabel(v){if(lang==='he'){const p=v.split('×');return p[0]+' על '+p[1]+' ס"מ'}return v+' '+t('cm')}
+function renderEnl(key){
+  const st=enlState[key]||(enlState[key]=[]);
+  const wrap=document.createElement('div');wrap.className='enl';
+  st.forEach((r,ri)=>{
+    const row=document.createElement('div');row.className='enl-row';
+    const sz=document.createElement('select');sz.id=`${key}-enl-size-${ri}`;sz.setAttribute('aria-label',t('enl_size'));
+    ENL_SIZES.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=sizeLabel(v);sz.appendChild(o)});sz.value=r.size;
+    sz.onchange=()=>{r.size=sz.value;updateSummary()};
+    const mt=document.createElement('select');mt.id=`${key}-enl-mat-${ri}`;mt.setAttribute('aria-label',t('enl_mat'));
+    ENL_MAT.forEach((m,mi)=>{const o=document.createElement('option');o.value=mi;o.textContent=m[lang];mt.appendChild(o)});mt.value=r.mat;
+    mt.onchange=()=>{r.mat=+mt.value;updateSummary()};
+    const q=document.createElement('div');q.className='qty';
+    const minus=document.createElement('button');minus.type='button';minus.className='btn ghost sm';minus.textContent='−';minus.setAttribute('aria-label',t('enl_less'));
+    const n=document.createElement('output');n.textContent=r.n;n.setAttribute('aria-live','polite');
+    const plus=document.createElement('button');plus.type='button';plus.className='btn ghost sm';plus.textContent='+';plus.setAttribute('aria-label',t('enl_more'));
+    minus.onclick=()=>{if(r.n>1){r.n--;n.textContent=r.n;updateSummary()}};
+    plus.onclick=()=>{if(r.n<20){r.n++;n.textContent=r.n;updateSummary()}};
+    q.append(minus,n,plus);
+    const del=document.createElement('button');del.type='button';del.className='btn ghost sm';del.textContent=t('enl_del');
+    del.onclick=()=>{st.splice(ri,1);renderBuilder(key,true)};
+    row.append(sz,mt,q,del);wrap.appendChild(row);
+  });
+  const add=document.createElement('button');add.type='button';add.className='btn ghost';add.textContent=st.length?t('enl_add_more'):t('enl_add');
+  add.onclick=()=>{st.push({size:'50×70',mat:0,n:1});renderBuilder(key,true)};
+  wrap.appendChild(add);return wrap;
+}
 function choices(){
   return EVENTS[current].groups.map(gr=>{
+    if(gr.type==='enl'){const st=enlState[current]||[];return st.length?[gr.label[lang],st.map(r=>`${ENL_MAT[r.mat][lang]} ${sizeLabel(r.size)}: ${r.n} ${t('pcs')}`).join(', ')]:null}
     const vals=[...document.querySelectorAll(`input[name="${current}-${gr.id}"]:checked`)]
       .filter(i=>!(gr.none===0&&i.dataset.i==='0'))
       .map(i=>gr.opts[+i.dataset.i][0][lang]);
