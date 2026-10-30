@@ -106,7 +106,7 @@ section+section{border-top:1px solid var(--line)}
 .ev p{font-size:15px;color:var(--text)}
 .ev .more{font-size:15px;color:var(--gold);font-weight:500;margin-top:4px}
 .ev.wide{grid-column:1/-1;min-height:420px}
-@media (min-width:900px){.events{grid-template-columns:repeat(6,minmax(0,1fr))}.ev{grid-column:span 2}.ev.wide{grid-column:span 4}.ev.half{grid-column:span 3}}
+@media (min-width:900px){.events{grid-template-columns:repeat(6,minmax(0,1fr))}.ev{grid-column:span 2}.ev.wide{grid-column:span 4}.ev.full{grid-column:1/-1;min-height:360px}.ev.half{grid-column:span 3}}
 
 /* photo mosaic */
 .mosaic{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:160px;grid-auto-flow:dense}
@@ -337,9 +337,10 @@ footer{border-top:1px solid var(--line);padding-block:40px 112px;color:var(--mut
       <div class="events">
         <a class="ev wide" href="#wedding"><img src="img/wed-1.jpg" alt="" loading="lazy" style="object-position:50% 25%"><div class="in"><h3 data-t="c_wedding"></h3><p data-t="c_wedding_p"></p><span class="more" data-t="more"></span></div></a>
         <a class="ev" href="#barmitzvah"><img src="img/bar-2.jpg" alt="" loading="lazy"><div class="in"><h3 data-t="c_bar"></h3><p data-t="c_bar_p"></p><span class="more" data-t="more"></span></div></a>
+        <a class="ev" href="#batmitzvah"><img src="img/bat-1.jpg" alt="" loading="lazy" style="object-position:50% 20%"><div class="in"><h3 data-t="c_bat"></h3><p data-t="c_bat_p"></p><span class="more" data-t="more"></span></div></a>
         <a class="ev" href="#brit"><img src="img/brit-1.jpg" alt="" loading="lazy"><div class="in"><h3 data-t="c_brit"></h3><p data-t="c_brit_p"></p><span class="more" data-t="more"></span></div></a>
         <a class="ev" href="#hina"><img src="img/hina-1.jpg" alt="" loading="lazy"><div class="in"><h3 data-t="c_hina"></h3><p data-t="c_hina_p"></p><span class="more" data-t="more"></span></div></a>
-        <a class="ev" href="#event"><img src="img/sheva-1.jpg" alt="" loading="lazy"><div class="in"><h3 data-t="c_event"></h3><p data-t="c_event_p"></p><span class="more" data-t="more"></span></div></a>
+        <a class="ev full" href="#event"><img src="img/sheva-1.jpg" alt="" loading="lazy"><div class="in"><h3 data-t="c_event"></h3><p data-t="c_event_p"></p><span class="more" data-t="more"></span></div></a>
       </div>
     </div>
   </section>
@@ -538,7 +539,7 @@ he:{
   hero_btn1:'בחירת חבילה לאירוע',hero_btn2:'האם התאריך פנוי?',
   ev_h2:'איזה אירוע אתם חוגגים?',ev_p:'לחצו על האירוע כדי לראות תמונות ולהרכיב חבילה בעצמכם.',more:'לתמונות ובחירת חבילה ←',
   c_wedding:'חתונות',c_wedding_p:'התארגנות, צילומי חוץ, חופה ורחבה. אלבומים לזוג ולהורים.',
-  c_bar:'בר ובת מצווה',c_bar_p:'העלייה לתורה, צילומי חוץ, אלבום בוק והאירוע.',
+  c_bar:'בר מצווה',c_bar_p:'העלייה לתורה, תפילין, צילומי חוץ ואלבום בוק.',c_bat:'בת מצווה',c_bat_p:'צילומי חוץ, אלבום בוק והמסיבה.',
   c_brit:'בריתות',c_brit_p:'צילום עדין של הברית והסעודה.',
   c_hina:'חינות',c_hina_p:'הלבוש המסורתי, הטקס והשמחה.',
   c_event:'שבע ברכות ואירועים',c_event_p:'שבע ברכות, ימי הולדת וערבים משפחתיים.',
@@ -581,7 +582,7 @@ ru:{
   hero_btn1:'Выбрать пакет',hero_btn2:'Свободна ли дата?',
   ev_h2:'Какой у вас праздник?',ev_p:'Нажмите на мероприятие: там фото и выбор пакета.',more:'Фото и выбор пакета →',
   c_wedding:'Свадьбы',c_wedding_p:'Сборы, прогулка, хупа и танцпол. Альбомы для пары и родителей.',
-  c_bar:'Бар- и бат-мицва',c_bar_p:'Алия к Торе, съёмка на природе, альбом-бук и праздник.',
+  c_bar:'Бар-мицва',c_bar_p:'Алия к Торе, тфилин, съёмка на природе и альбом-бук.',c_bat:'Бат-мицва',c_bat_p:'Съёмка на природе, альбом-бук и праздник.',
   c_brit:'Брит-мила',c_brit_p:'Бережная съёмка брита и праздничной трапезы.',
   c_hina:'Хина',c_hina_p:'Традиционные наряды, обряд и веселье.',
   c_event:'Шева брахот и праздники',c_event_p:'Шева брахот, дни рождения и семейные вечера.',
@@ -624,7 +625,7 @@ en:{
   hero_btn1:'Build your package',hero_btn2:'Is my date free?',
   ev_h2:'What are you celebrating?',ev_p:'Tap an event to see photos and build your own package.',more:'Photos & packages →',
   c_wedding:'Weddings',c_wedding_p:'Getting ready, outdoor shoot, chuppah and dance floor. Albums for the couple and parents.',
-  c_bar:'Bar & Bat Mitzvah',c_bar_p:'Called to the Torah, an outdoor shoot, a book album and the party.',
+  c_bar:'Bar Mitzvah',c_bar_p:'Called to the Torah, tefillin, an outdoor shoot and a book album.',c_bat:'Bat Mitzvah',c_bat_p:'An outdoor shoot, a book album and the party.',
   c_brit:'Brit Milah',c_brit_p:'Gentle coverage of the brit and the festive meal.',
   c_hina:'Henna',c_hina_p:'Traditional dress, the ceremony and the joy.',
   c_event:'Sheva Brachot & more',c_event_p:'Sheva brachot, birthdays and family evenings.',
@@ -684,6 +685,10 @@ const DIGITAL=[L('אלבום דיגיטלי מודפס','Печатный «ди
 const POCKET=[L('אלבום כיסים','Альбом с кармашками','Slip-in album'),L('כ-200 תמונות מודפסות','Около 200 напечатанных фото','About 200 prints')];
 const ALB_LABEL=L('אלבומים','Альбомы','Albums'),ALB_HINT=L('אפשר לבחור כמה','Можно выбрать несколько','Choose as many as you like');
 
+const BM_EXTRAS=EXTRAS([[L('צילומי חוץ בטבע','Съёмка на природе','Outdoor shoot'),L('יום צילום לפני האירוע, לאלבום הבוק','Отдельный день до праздника, для альбома-бука','A separate shoot before the event, for the book album')],HIGHLIGHT,DRONE,USB]);
+const BM_ALBUMS={id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[
+  [L('אלבום בוק','Альбом-бук','Book album'),L('אלבום מעוצב מצילומי החוץ','Дизайнерский альбом с фотосессии на природе','A designed album from the outdoor shoot')],
+  [L('אלבום גדול מהאירוע','Большой альбом праздника','Large event album')],DIGITAL,POCKET]};
 const EVENTS={
   wedding:{img:'wed-5',title:L('חתונות','Свадьбы','Weddings'),tag:L('חתונה','Свадьба','Wedding'),
     intro:L('מההתארגנות של הכלה והחתן, דרך צילומי החוץ והחופה ועד הריקוד האחרון.','От сборов жениха и невесты, через прогулку и хупу, до последнего танца.','From the bride and groom getting ready, through the outdoor shoot and chuppah, to the last dance.'),
@@ -697,21 +702,19 @@ const EVENTS={
         [L('אלבום גדול לזוג','Большой альбом для пары','Large album for the couple'),L('אלבום מעוצב ומודפס','Дизайнерский печатный альбом','A designed, printed album')],
         [L('אלבומים קטנים להורים','Маленькие альбомы для родителей','Small albums for the parents')],DIGITAL,POCKET]},
       ENL]},
-  barmitzvah:{img:'bar-2',title:L('בר ובת מצווה','Бар- и бат-мицва','Bar & Bat Mitzvah'),tag:L('בר / בת מצווה','Бар/бат-мицва','Bar/Bat Mitzvah'),
-    intro:L('העלייה לתורה, צילומי חוץ בטבע, אלבום בוק מעוצב וכל הרגעים מהאירוע.','Алия к Торе, съёмка на природе, альбом-бук и все главные моменты праздника.','Called to the Torah, an outdoor shoot, a designed book album and every highlight of the party.'),
-    gallery:['bar-2','bar-3','bar-1','bar-5','bar-4','bar-6','bat-1','bat-2','bat-3','bat-4','bat-5'],
+  barmitzvah:{img:'bar-2',title:L('בר מצווה','Бар-мицва','Bar Mitzvah'),tag:L('בר מצווה','Бар-мицва','Bar Mitzvah'),
+    intro:L('העלייה לתורה והנחת תפילין, צילומי חוץ בטבע, אלבום בוק מעוצב וכל הרגעים מהאירוע.','Алия к Торе и тфилин, съёмка на природе, альбом-бук и все главные моменты праздника.','Called to the Torah, tefillin, an outdoor shoot, a designed book album and every highlight of the party.'),
+    gallery:['bar-2','bar-3','bar-1','bar-5','bar-4','bar-6'],
     groups:[
-      {id:'kind',label:L('סוג האירוע','Праздник','Celebration'),type:'radio',opts:[[L('בר מצווה','Бар-мицва','Bar Mitzvah')],[L('בת מצווה','Бат-мицва','Bat Mitzvah')]]},
       {id:'torah',label:L('העלייה לתורה / הנחת תפילין','Алия к Торе / тфилин','Torah reading / tefillin'),type:'radio',none:0,opts:[
         [L('לא צריך','Не нужно','Not needed')],
         [L('בבית הכנסת','В синагоге','At the synagogue')],
         [L('בכותל','У Котеля','At the Western Wall')]]},
-      PHOTOG,VIDEO,
-      EXTRAS([[L('צילומי חוץ בטבע','Съёмка на природе','Outdoor shoot'),L('יום צילום לפני האירוע, לאלבום הבוק','Отдельный день до праздника, для альбома-бука','A separate shoot before the event, for the book album')],HIGHLIGHT,DRONE,USB]),
-      {id:'albums',label:ALB_LABEL,hint:ALB_HINT,type:'check',opts:[
-        [L('אלבום בוק','Альбом-бук','Book album'),L('אלבום מעוצב מצילומי החוץ','Дизайнерский альбом с фотосессии на природе','A designed album from the outdoor shoot')],
-        [L('אלבום גדול מהאירוע','Большой альбом праздника','Large event album')],DIGITAL,POCKET]},
-      ENL]},
+      PHOTOG,VIDEO,BM_EXTRAS,BM_ALBUMS,ENL]},
+  batmitzvah:{img:'bat-4',title:L('בת מצווה','Бат-мицва','Bat Mitzvah'),tag:L('בת מצווה','Бат-мицва','Bat Mitzvah'),
+    intro:L('צילומי חוץ בטבע, אלבום בוק מעוצב וכל הרגעים מהמסיבה.','Съёмка на природе, альбом-бук и все главные моменты праздника.','An outdoor shoot, a designed book album and every highlight of the party.'),
+    gallery:['bat-1','bat-2','bat-3','bat-4','bat-5'],
+    groups:[PHOTOG,VIDEO,BM_EXTRAS,BM_ALBUMS,ENL]},
   brit:{img:'brit-2',title:L('בריתות','Брит-мила','Brit Milah'),tag:L('ברית','Брит-мила','Brit Milah'),
     intro:L('צילום עדין ומהיר של הברית והסעודה, בלי להפריע למשפחה.','Бережная и быстрая съёмка брита и трапезы. Не мешаем семье.','Gentle, quick coverage of the brit and the meal, without getting in the family’s way.'),
     gallery:['brit-1','brit-2','brit-3','brit-4','brit-5'],
@@ -754,7 +757,7 @@ $('langMenu').addEventListener('click',e=>{const b=e.target.closest('button');if
 document.addEventListener('click',e=>{if(!e.target.closest('.lang'))closeLang()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLang()});
 
-const CLIPS=[{"id": "zehavit-yechiam-teaser", "cat": "wedding", "t": {"he": "טיזר חתונה, זהבית ויחיעם", "ru": "Тизер свадьбы Захавит и Яхиэма", "en": "Wedding teaser, Zehavit & Yechiam"}, "src": "https://dl.dropboxusercontent.com/scl/fi/754e19g041cxtcuclynae/16x9-2.mp4?rlkey=jpwjo06sevqh2btxnkhw1qseu", "cover": "img/clip-zehavit-yechiam-teaser.jpg"}, {"id": "zehavit-yechiam-clip", "cat": "wedding", "t": {"he": "קליפ חתונה, זהבית ויחיעם", "ru": "Свадебный клип Захавит и Яхиэма", "en": "Wedding clip, Zehavit & Yechiam"}, "src": "https://dl.dropboxusercontent.com/scl/fi/mxv7ypi63k7ygom9wypta/.mp4?rlkey=0vxl93l7zmcfjrrnzdfbm5qxi", "cover": "img/clip-zehavit-yechiam-clip.jpg"}, {"id": "rafael-mazal-clip", "cat": "wedding", "t": {"he": "קליפ חתונה, רפאל ומזל", "ru": "Свадебный клип Рафаэля и Мазаль", "en": "Wedding clip, Rafael & Mazal"}, "src": "https://dl.dropboxusercontent.com/scl/fi/tw62cxvu0zkwwx4i3svof/.mp4?rlkey=6u1nva7bl7azh8qq13x50cb0u", "cover": "img/clip-rafael-mazal-clip.jpg"}, {"id": "sara-gavriel", "cat": "wedding", "t": {"he": "היילייטס חתונה, שרה וגבריאל", "ru": "Хайлайт свадьбы Сары и Габриэля", "en": "Wedding highlights, Sara & Gavriel"}, "src": "https://dl.dropboxusercontent.com/scl/fi/offkuzyioeeomk3j6r1ho/26.5.25.mp4?rlkey=fdfrau87qtjv5sf510ys95l72", "cover": ""}, {"id": "eliyor-13-10-26", "cat": "barmitzvah", "t": {"he": "קליפ בר מצווה, אליאור", "ru": "Клип бар-мицвы Элиора", "en": "Bar mitzvah clip, Elior"}, "src": "https://dl.dropboxusercontent.com/scl/fo/5wqf39nx8l801g8e2qolf/AIRcYeVh7_ARij9RK8_Me1Q/%D7%A7%D7%9C%D7%99%D7%A4%20%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%90%D7%9C%D7%99%D7%90%D7%95%D7%A8.mp4?rlkey=6zchfbvhn7pbbipoq3i0d4hwr", "cover": "img/clip-eliyor-13-10-26.jpg"}, {"id": "g-clip", "cat": "barmitzvah", "t": {"he": "קליפ בר מצווה, גרגורי", "ru": "Клип бар-мицвы Григория", "en": "Bar mitzvah clip, Gregory"}, "src": "https://dl.dropboxusercontent.com/scl/fo/wrcnvp1j7vbr84ue3chn5/AOl_53vLkkCmF_fRACKwJY0/Bar%20Mitzvah%20of%20Gregory%20Davidov%20-%20Clip.mp4?rlkey=jkq688rsaqnj03lc2ry13nvqn", "cover": "img/clip-g-clip.jpg"}, {"id": "j-aliyah-hl", "cat": "barmitzvah", "t": {"he": "עלייה לתורה בכותל, ג'ושוע", "ru": "Алия к Торе у Котеля, Джошуа", "en": "Aliyah at the Western Wall, Joshua"}, "src": "https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/AI8RvTA5OXRkGoENH2-3QhI/Aliyah%20LaTorah%20at%20the%20Western%20Wall%20-%20Highlights%20-%20Joshua%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt", "cover": "img/clip-j-aliyah-hl.jpg"}, {"id": "j-celebration-hl", "cat": "barmitzvah", "t": {"he": "מסיבת בר מצווה, ג'ושוע", "ru": "Праздник бар-мицвы Джошуа", "en": "Bar mitzvah party, Joshua"}, "src": "https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/APHZIkDBmKTDF_uC9MmxNZo/Bar%20Mitzvah%20Celebration%20-%20Highlights%20-%20Joshua%20Davydov%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt", "cover": "img/clip-j-celebration-hl.jpg"}, {"id": "v-david-2-8-23-clip", "cat": "barmitzvah", "t": {"he": "תקציר בר מצווה, דוד", "ru": "Хайлайт бар-мицвы Давида", "en": "Bar mitzvah highlights, David"}, "src": "https://dl.dropboxusercontent.com/scl/fo/nx9dcko3tbv9v40vnsqtc/AEacwtlZ3H0Clj18adttew0/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%93%D7%95%D7%93%202.8.23%20%D7%AA%D7%A7%D7%A6%D7%99%D7%A8.mp4?rlkey=hx96zwfjymr6628jrsfzdmsc6", "cover": "img/clip-v-david-2-8-23-clip.jpg"}, {"id": "meir-haim", "cat": "barmitzvah", "t": {"he": "תקציר בר מצווה, מאיר חיים", "ru": "Хайлайт бар-мицвы Меира Хаима", "en": "Bar mitzvah highlights, Meir Haim"}, "src": "https://dl.dropboxusercontent.com/scl/fi/xuo7xhx54fygct9x8jylq/.mp4?rlkey=8sl9d8ql9mbgmvu43r2803klf", "cover": ""}, {"id": "v-noa-1-9-26", "cat": "barmitzvah", "t": {"he": "תקציר בת מצווה, נועה", "ru": "Хайлайт бат-мицвы Ноа", "en": "Bat mitzvah highlights, Noa"}, "src": "https://dl.dropboxusercontent.com/scl/fo/fu645h56864mkperls7by/AJt7SxzVgkgS7irQrZyrYNg/%D7%AA%D7%A7%D7%A6%D7%99%D7%A8%20%D7%91%D7%AA%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%A0%D7%95%D7%A2%D7%94%201.9.26.mp4?rlkey=3whlrxad34sa807940m0eqfcm", "cover": "img/clip-v-noa-1-9-26.jpg"}, {"id": "v-noa-1-9-26-b", "cat": "barmitzvah", "t": {"he": "קליפ בת מצווה, נועה", "ru": "Клип бат-мицвы Ноа", "en": "Bat mitzvah clip, Noa"}, "src": "https://dl.dropboxusercontent.com/scl/fo/fu645h56864mkperls7by/AAf1LpZhacCD296dCf1CCig/%D7%A7%D7%9C%D7%99%D7%A4%20%D7%91%D7%AA%20%D7%9E%D7%A6%D7%95%D7%94%20%D7%A0%D7%95%D7%A2%D7%94%20%D7%A4%D7%99%D7%A8%D7%95%D7%91%20%D7%92%D7%9E%D7%95%D7%A8.mp4?rlkey=3whlrxad34sa807940m0eqfcm", "cover": "img/clip-v-noa-1-9-26-b.jpg"}, {"id": "hanpasha", "cat": "new", "t": {"he": "חדש: הנפשת תמונות, מתבגר מול העיניים", "ru": "Новинка: оживление фото «Растёт на глазах»", "en": "New: animated photos, growing up"}, "src": "https://dl.dropboxusercontent.com/scl/fi/uyvv1tw3n4t8bu4c7viij/.mp4?rlkey=hs6zh79o0a2d8ktlx9doifa4p", "cover": ""}];
+const CLIPS=[{"id": "zehavit-yechiam-teaser", "cat": "wedding", "t": {"he": "טיזר חתונה, זהבית ויחיעם", "ru": "Тизер свадьбы Захавит и Яхиэма", "en": "Wedding teaser, Zehavit & Yechiam"}, "src": "https://dl.dropboxusercontent.com/scl/fi/754e19g041cxtcuclynae/16x9-2.mp4?rlkey=jpwjo06sevqh2btxnkhw1qseu", "cover": "img/clip-zehavit-yechiam-teaser.jpg"}, {"id": "zehavit-yechiam-clip", "cat": "wedding", "t": {"he": "קליפ חתונה, זהבית ויחיעם", "ru": "Свадебный клип Захавит и Яхиэма", "en": "Wedding clip, Zehavit & Yechiam"}, "src": "https://dl.dropboxusercontent.com/scl/fi/mxv7ypi63k7ygom9wypta/.mp4?rlkey=0vxl93l7zmcfjrrnzdfbm5qxi", "cover": "img/clip-zehavit-yechiam-clip.jpg"}, {"id": "rafael-mazal-clip", "cat": "wedding", "t": {"he": "קליפ חתונה, רפאל ומזל", "ru": "Свадебный клип Рафаэля и Мазаль", "en": "Wedding clip, Rafael & Mazal"}, "src": "https://dl.dropboxusercontent.com/scl/fi/tw62cxvu0zkwwx4i3svof/.mp4?rlkey=6u1nva7bl7azh8qq13x50cb0u", "cover": "img/clip-rafael-mazal-clip.jpg"}, {"id": "sara-gavriel", "cat": "wedding", "t": {"he": "היילייטס חתונה, שרה וגבריאל", "ru": "Хайлайт свадьбы Сары и Габриэля", "en": "Wedding highlights, Sara & Gavriel"}, "src": "https://dl.dropboxusercontent.com/scl/fi/offkuzyioeeomk3j6r1ho/26.5.25.mp4?rlkey=fdfrau87qtjv5sf510ys95l72", "cover": ""}, {"id": "eliyor-13-10-26", "cat": "barmitzvah", "t": {"he": "קליפ בר מצווה, אליאור", "ru": "Клип бар-мицвы Элиора", "en": "Bar mitzvah clip, Elior"}, "src": "https://dl.dropboxusercontent.com/scl/fo/5wqf39nx8l801g8e2qolf/AIRcYeVh7_ARij9RK8_Me1Q/%D7%A7%D7%9C%D7%99%D7%A4%20%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%90%D7%9C%D7%99%D7%90%D7%95%D7%A8.mp4?rlkey=6zchfbvhn7pbbipoq3i0d4hwr", "cover": "img/clip-eliyor-13-10-26.jpg"}, {"id": "g-clip", "cat": "barmitzvah", "t": {"he": "קליפ בר מצווה, גרגורי", "ru": "Клип бар-мицвы Григория", "en": "Bar mitzvah clip, Gregory"}, "src": "https://dl.dropboxusercontent.com/scl/fo/wrcnvp1j7vbr84ue3chn5/AOl_53vLkkCmF_fRACKwJY0/Bar%20Mitzvah%20of%20Gregory%20Davidov%20-%20Clip.mp4?rlkey=jkq688rsaqnj03lc2ry13nvqn", "cover": "img/clip-g-clip.jpg"}, {"id": "j-aliyah-hl", "cat": "barmitzvah", "t": {"he": "עלייה לתורה בכותל, ג'ושוע", "ru": "Алия к Торе у Котеля, Джошуа", "en": "Aliyah at the Western Wall, Joshua"}, "src": "https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/AI8RvTA5OXRkGoENH2-3QhI/Aliyah%20LaTorah%20at%20the%20Western%20Wall%20-%20Highlights%20-%20Joshua%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt", "cover": "img/clip-j-aliyah-hl.jpg"}, {"id": "j-celebration-hl", "cat": "barmitzvah", "t": {"he": "מסיבת בר מצווה, ג'ושוע", "ru": "Праздник бар-мицвы Джошуа", "en": "Bar mitzvah party, Joshua"}, "src": "https://dl.dropboxusercontent.com/scl/fo/s91f4inxn4fkzis6hmo6k/APHZIkDBmKTDF_uC9MmxNZo/Bar%20Mitzvah%20Celebration%20-%20Highlights%20-%20Joshua%20Davydov%20-%20May%2028%2C%202026.mp4?rlkey=geo3iaezz49jouu8fp6bss3qt", "cover": "img/clip-j-celebration-hl.jpg"}, {"id": "v-david-2-8-23-clip", "cat": "barmitzvah", "t": {"he": "תקציר בר מצווה, דוד", "ru": "Хайлайт бар-мицвы Давида", "en": "Bar mitzvah highlights, David"}, "src": "https://dl.dropboxusercontent.com/scl/fo/nx9dcko3tbv9v40vnsqtc/AEacwtlZ3H0Clj18adttew0/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%93%D7%95%D7%93%202.8.23%20%D7%AA%D7%A7%D7%A6%D7%99%D7%A8.mp4?rlkey=hx96zwfjymr6628jrsfzdmsc6", "cover": "img/clip-v-david-2-8-23-clip.jpg"}, {"id": "meir-haim", "cat": "barmitzvah", "t": {"he": "תקציר בר מצווה, מאיר חיים", "ru": "Хайлайт бар-мицвы Меира Хаима", "en": "Bar mitzvah highlights, Meir Haim"}, "src": "https://dl.dropboxusercontent.com/scl/fi/xuo7xhx54fygct9x8jylq/.mp4?rlkey=8sl9d8ql9mbgmvu43r2803klf", "cover": ""}, {"id": "v-noa-1-9-26", "cat": "batmitzvah", "t": {"he": "תקציר בת מצווה, נועה", "ru": "Хайлайт бат-мицвы Ноа", "en": "Bat mitzvah highlights, Noa"}, "src": "https://dl.dropboxusercontent.com/scl/fo/fu645h56864mkperls7by/AJt7SxzVgkgS7irQrZyrYNg/%D7%AA%D7%A7%D7%A6%D7%99%D7%A8%20%D7%91%D7%AA%20%D7%9E%D7%A6%D7%95%D7%95%D7%94%20%D7%A0%D7%95%D7%A2%D7%94%201.9.26.mp4?rlkey=3whlrxad34sa807940m0eqfcm", "cover": "img/clip-v-noa-1-9-26.jpg"}, {"id": "hanpasha", "cat": "new", "t": {"he": "חדש: הנפשת תמונות, מתבגר מול העיניים", "ru": "Новинка: оживление фото «Растёт на глазах»", "en": "New: animated photos, growing up"}, "src": "https://dl.dropboxusercontent.com/scl/fi/uyvv1tw3n4t8bu4c7viij/.mp4?rlkey=hs6zh79o0a2d8ktlx9doifa4p", "cover": ""}];
 function fillClips(box,list){
   box.innerHTML='';
   list.forEach(c=>{
@@ -788,7 +791,7 @@ const CLIENTS={
  sara:{n:{he:'שרה וגבריאל',en:'Sara & Gavriel'},clips:['sara-gavriel']},
  elior:{n:{he:'משפחת אליאור',en:'Elior\'s family'},photos:['bar-'],clips:['eliyor-13-10-26']},
  shira:{n:{he:'משפחת שירה',en:'Shira\'s family'},photos:['bat-']},
- noa:{n:{he:'משפחת נועה',en:'Noa\'s family'},clips:['v-noa-1-9-26','v-noa-1-9-26-b']},
+ noa:{n:{he:'משפחת נועה',en:'Noa\'s family'},clips:['v-noa-1-9-26']},
  david:{n:{he:'משפחת דוד',en:'David\'s family'},clips:['v-david-2-8-23-clip']},
  meirhaim:{n:{he:'משפחת מאיר חיים',en:'Meir Haim\'s family'},clips:['meir-haim']},
  gregory:{n:{he:'משפחת דוידוב',en:'the Davidov family'},clips:['g-clip']},
