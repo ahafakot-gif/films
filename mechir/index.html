@@ -170,12 +170,7 @@ pre.quote{white-space:pre-wrap;word-break:break-word;background:var(--surface);b
     </section>
 
     <section class="grp">
-      <h2>הטקסט ללקוח (רק מחיר כולל)</h2>
-      <div class="chips" id="vatShow" style="margin-bottom:8px">
-        <button type="button" class="chip" data-v="both">לפני + כולל מע״מ</button>
-        <button type="button" class="chip" data-v="incl">רק כולל מע״מ</button>
-        <button type="button" class="chip" data-v="plus">מחיר + מע״מ</button>
-      </div>
+      <h2>הטקסט ללקוח (רק מחיר כולל מע״מ)</h2>
       <pre class="quote" id="quote"></pre>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         <button class="btn main" id="copy2">העתק הצעה</button>
@@ -396,9 +391,7 @@ function quoteText(r){
   if(!lines.length)L.push("• (עוד לא נבחר כלום)");else L.push(...lines);
   if(r.ch.some(x=>x.it.id==="travel"))L.push("• כולל נסיעה");
   L.push("");
-  if(sel.vatShow==="incl")L.push("מחיר כולל מע״מ: "+nf(r.incl)+" ₪");
-  else if(sel.vatShow==="plus")L.push("מחיר: "+nf(r.before)+" ₪ + מע״מ");
-  else{L.push("מחיר לפני מע״מ: "+nf(r.before)+" ₪");L.push("מחיר כולל מע״מ: "+nf(r.incl)+" ₪");}
+  L.push("מחיר כולל מע״מ: "+nf(r.incl)+" ₪");
   L.push("");L.push("אליעזר הפקות – צילום אירועים");L.push("050-6611106");
   return L.join("\n");
 }
