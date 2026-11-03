@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="הצעת מחיר">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#9a6b12">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="manifest" href="manifest.json">
+<title>הצעת מחיר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Suez+One&display=swap">
+<style>
+/* Layout: one narrow column of tap-chips grouped by service, sticky total bar at the bottom like a till */
+:root{
+  --bg:#eceef2; --surface:#ffffff; --line:#d9dce3; --fg:#1b1e25; --muted:#626a78;
+  --accent:#9a6b12; --accent-soft:#f3e6c8; --on-accent:#ffffff; --warn:#b4231b; --warn-soft:#fbe3e1;
+  --display:"Suez One","Assistant",Georgia,serif;
+  --body:"Assistant","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13151a; --surface:#1c1f26; --line:#2d313b; --fg:#eceae4; --muted:#9aa1ad;
+  --accent:#d8a84a; --accent-soft:#3a301c; --on-accent:#1a1406; --warn:#ff8a80; --warn-soft:#3b1f1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13151a; --surface:#1c1f26; --line:#2d313b; --fg:#eceae4; --muted:#9aa1ad;
+  --accent:#d8a84a; --accent-soft:#3a301c; --on-accent:#1a1406; --warn:#ff8a80; --warn-soft:#3b1f1d; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;direction:rtl}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 150px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:400;font-size:1.55rem;margin:0;color:var(--accent)}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px}
+.tabs button{border:0;background:none;font:inherit;font-weight:700;color:var(--muted);padding:6px 16px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+section.grp{margin-top:18px}
+section.grp h2{font-size:.82rem;letter-spacing:.06em;color:var(--muted);margin:0 0 8px;font-weight:800}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fields label{display:flex;flex-direction:column;gap:3px;font-size:.8rem;color:var(--muted);font-weight:600;min-width:0}
+.fields .full{grid-column:1/-1}
+input[type=text],input[type=number],input[type=tel]{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:inherit;font-weight:600;font-size:.95rem;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-align:right}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--fg);box-shadow:inset 0 0 0 1px var(--accent)}
+.chip .pr{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip .nop{font-size:.72rem;color:var(--warn)}
+.qrow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 6px 6px 12px;margin-bottom:7px}
+.qrow.on{border-color:var(--accent);background:var(--accent-soft)}
+.qrow .nm{font-weight:600;min-width:0;padding-right:6px}
+.qrow .nm small{display:block;font-weight:400;color:var(--muted);font-size:.75rem;font-variant-numeric:tabular-nums}
+.step{display:flex;align-items:center;gap:2px;flex:none}
+.step button{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:1.25rem;font-weight:700;cursor:pointer}
+.step output{min-width:30px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+.ptable{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.ptable table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+.ptable th,.ptable td{padding:6px;text-align:center;border-bottom:1px solid var(--line)}
+.ptable th{font-size:.8rem;color:var(--muted)}
+.ptable td:first-child,.ptable th:first-child{text-align:right;font-weight:700;padding-right:12px}
+.ptable tr:last-child td{border-bottom:0}
+.mini{display:inline-flex;align-items:center;gap:2px}
+.mini button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-weight:800;cursor:pointer}
+.mini output{min-width:20px;font-weight:800}
+.mini.on output{color:var(--accent)}
+.extra{display:grid;grid-template-columns:1fr 110px auto;gap:6px;margin-bottom:6px}
+.btn{font:inherit;font-weight:700;border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.btn.main{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:none}
+.del{font:inherit;border:0;background:none;color:var(--warn);font-weight:700;cursor:pointer;padding:4px 8px}
+pre.quote{white-space:pre-wrap;word-break:break-word;background:var(--surface);border:1px dashed var(--accent);border-radius:12px;padding:14px;font-family:var(--body);font-size:.95rem;margin:0}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:8px 12px;font-weight:600;font-size:.88rem;margin-top:8px}
+.bar{position:fixed;inset:auto 0 0 0;background:var(--surface);border-top:1px solid var(--line);z-index:20;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar .in{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tot{flex:1;min-width:150px}
+.tot .lbl{font-size:.75rem;color:var(--muted);font-weight:700}
+.tot .num{font-family:var(--display);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--accent)}
+.tot .sub{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.disc{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);font-weight:700}
+.disc input{width:96px;padding:7px 9px}
+.breakdown{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 12px}
+.breakdown div{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.breakdown div:last-child{border-bottom:0}
+.breakdown .z{color:var(--warn)}
+.prow{display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:0}
+.prow span{min-width:0}
+.plist{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 12px}
+.status{font-size:.8rem;color:var(--muted);margin-top:6px}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 18px;border-radius:999px;font-weight:700;z-index:30}
+.addrow{display:grid;grid-template-columns:1fr 110px 130px auto;gap:6px;margin-top:10px}
+.datefld{display:flex;gap:6px}
+.calbtn{flex:none;display:inline-flex;align-items:center;gap:5px;font:inherit;font-weight:700;color:var(--on-accent);background:var(--accent);border:0;border-radius:10px;padding:0 12px;cursor:pointer}
+.calwrap{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
+.cal{background:var(--surface);color:var(--fg);width:100%;max-width:440px;border-radius:18px 18px 0 0;padding:14px max(14px,env(safe-area-inset-left,0px)) calc(14px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 30px rgba(0,0,0,.25)}
+@media (min-width:600px){.calwrap{align-items:center}.cal{border-radius:18px}}
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.calhead button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit;font-size:1.3rem;font-weight:800;cursor:pointer}
+.caltitle{text-align:center;min-width:0}
+.caltitle b{display:block;font-family:var(--display);font-weight:400;font-size:1.25rem}
+.caltitle small{color:var(--accent);font-weight:700}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:10px}
+.calgrid .wd{text-align:center;font-size:.75rem;color:var(--muted);font-weight:800;padding:4px 0}
+.calgrid button{font:inherit;border:1px solid transparent;background:var(--bg);color:var(--fg);border-radius:10px;padding:5px 0 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15;min-height:48px;justify-content:center}
+.calgrid button .g{font-weight:800;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.calgrid button .h{font-size:.72rem;color:var(--muted)}
+.calgrid button.sat{opacity:.45}
+.calgrid button.rh .h{color:var(--accent);font-weight:800}
+.calgrid button.today{border-color:var(--muted)}
+.calgrid button.sel{background:var(--accent);color:var(--on-accent)}
+.calgrid button.sel .h{color:var(--on-accent)}
+.calfoot{display:flex;gap:8px;justify-content:space-between;margin-top:10px;flex-wrap:wrap}
+@media (max-width:520px){
+  .fields{grid-template-columns:1fr}
+  .addrow{grid-template-columns:1fr 1fr}
+  .addrow .btn{grid-column:1/-1}
+  .extra{grid-template-columns:1fr 90px auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  :root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)} body{margin:0} img{max-width:100%}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>אליעזר הפקות · הצעת מחיר</h1>
+    <div class="tabs" role="tablist">
+      <button id="tabQ" role="tab" aria-selected="true">הצעה</button>
+      <button id="tabP" role="tab" aria-selected="false">מחירים</button>
+    </div>
+  </header>
+
+  <main id="viewQ">
+    <section class="grp">
+      <h2>האירוע</h2>
+      <div class="chips" id="evTypes"></div>
+      <div class="fields" style="margin-top:10px">
+        <label>שם הלקוח<input type="text" id="fClient" autocomplete="off"></label>
+        <label>תאריך<span class="datefld"><input type="text" id="fDate" autocomplete="off" placeholder="לחץ על לוח שנה"><button type="button" class="calbtn" id="calOpen" aria-label="פתח לוח שנה"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>לוח</button></span></label>
+        <label class="full">מקום / אולם<input type="text" id="fPlace" autocomplete="off"></label>
+      </div>
+    </section>
+    <div id="groups"></div>
+
+    <section class="grp">
+      <h2>פורטרטים והגדלות (כמות)</h2>
+      <div class="ptable"><table id="prints"></table></div>
+    </section>
+
+    <section class="grp">
+      <h2>תוספת חד־פעמית להצעה הזאת</h2>
+      <div id="extras"></div>
+      <div class="extra">
+        <input type="text" id="exName" placeholder="מה להוסיף">
+        <input type="number" id="exPrice" inputmode="numeric" placeholder="₪">
+        <button class="btn" id="exAdd">הוסף</button>
+      </div>
+    </section>
+
+    <section class="grp">
+      <h2>פירוט מחירים (רק בשבילך)</h2>
+      <div class="breakdown" id="breakdown"></div>
+      <div id="warn"></div>
+    </section>
+
+    <section class="grp">
+      <h2>הטקסט ללקוח (רק מחיר כולל)</h2>
+      <div class="chips" id="vatShow" style="margin-bottom:8px">
+        <button type="button" class="chip" data-v="both">לפני + כולל מע״מ</button>
+        <button type="button" class="chip" data-v="incl">רק כולל מע״מ</button>
+        <button type="button" class="chip" data-v="plus">מחיר + מע״מ</button>
+      </div>
+      <pre class="quote" id="quote"></pre>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn main" id="copy2">העתק הצעה</button>
+        <button class="btn ghost" id="reset">הצעה חדשה (נקה הכול)</button>
+      </div>
+      <div id="resetAsk" hidden class="warnbox">לנקות את כל הבחירות? <button class="btn" id="resetYes">כן, נקה</button> <button class="btn ghost" id="resetNo">לא</button></div>
+    </section>
+  </main>
+
+  <main id="viewP" hidden>
+    <section class="grp">
+      <h2>מע״מ</h2>
+      <div class="plist">
+        <div class="prow"><span>אחוז מע״מ</span><input type="number" id="vatRate" inputmode="decimal"></div>
+        <div class="prow" style="grid-template-columns:1fr"><span>המחירים שאני מכניס כאן הם:</span>
+          <div class="chips" id="vatMode"><button type="button" class="chip" data-v="0">לפני מע״מ</button><button type="button" class="chip" data-v="1">כולל מע״מ</button></div></div>
+      </div>
+    </section>
+    <section class="grp">
+      <h2>המחירים שלך (₪) — שומרים לבד</h2>
+      <div id="plists"></div>
+      <div class="status" id="saveStatus"></div>
+    </section>
+    <section class="grp">
+      <h2>החלפת קוד כניסה</h2>
+      <div class="extra" style="grid-template-columns:1fr auto"><input type="tel" id="pinNew" inputmode="numeric" placeholder="קוד חדש (4–8 ספרות)"><button class="btn" id="pinChange">החלף</button></div>
+    </section>
+    <section class="grp">
+      <h2>פריט חדש לרשימה</h2>
+      <div class="addrow">
+        <input type="text" id="nName" placeholder="שם הפריט (כמו שיופיע בהצעה)">
+        <input type="number" id="nPrice" inputmode="numeric" placeholder="₪">
+        <select id="nCat" class="btn"></select>
+        <button class="btn main" id="nAdd">הוסף</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="bar"><div class="in">
+  <div class="tot"><div class="lbl">סה״כ כולל מע״מ</div><div class="num" id="total">0 ₪</div><div class="sub" id="totSub"></div></div>
+  <label class="disc">הנחה ₪<input type="number" id="fDisc" inputmode="numeric" placeholder="0"></label>
+  <button class="btn main" id="copy">העתק</button>
+</div></div>
+<div class="toast" id="toast" hidden></div>
+<div class="calwrap" id="pinWrap" hidden style="align-items:center">
+  <div class="cal" style="border-radius:18px;max-width:340px;text-align:center">
+    <div style="font-family:var(--display);font-size:1.4rem;color:var(--accent)">הצעת מחיר</div>
+    <p style="margin:6px 0 12px;color:var(--muted)">הכנס את הקוד שלך (פעם אחת במכשיר הזה)</p>
+    <input type="tel" id="pinIn" inputmode="numeric" autocomplete="off" style="font-size:1.6rem;text-align:center;letter-spacing:.3em" maxlength="8">
+    <div id="pinErr" style="color:var(--warn);font-weight:700;min-height:1.4em;margin-top:6px"></div>
+    <button type="button" class="btn main" id="pinGo" style="width:100%;margin-top:6px">כניסה</button>
+  </div>
+</div>
+<div class="calwrap" id="calWrap" hidden>
+  <div class="cal" role="dialog" aria-label="לוח שנה">
+    <div class="calhead">
+      <button type="button" id="calPrev" aria-label="חודש קודם">›</button>
+      <div class="caltitle"><b id="calG"></b><small id="calH"></small></div>
+      <button type="button" id="calNext" aria-label="חודש הבא">‹</button>
+    </div>
+    <div class="calgrid" id="calGrid"></div>
+    <div class="calfoot">
+      <button type="button" class="btn ghost" id="calToday">היום</button>
+      <button type="button" class="btn" id="calClose">סגור</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const EVENTS=["חתונה","בר מצווה","בת מצווה","ברית","חינה","אירוע אחר"];
+const CATS=[
+ {id:"photo",name:"צילום תמונות"},
+ {id:"video",name:"וידאו"},
+ {id:"more",name:"צילומים נוספים"},
+ {id:"edit",name:"עריכה ומסך"},
+ {id:"album",name:"אלבומים ותמונות"},
+ {id:"deliv",name:"מסירה ונסיעה"}
+];
+// t = on/off, n = quantity. g = only one in the group
+const BASE=[
+ {id:"p1",c:"photo",t:"t",l:"צלם ראשי",q:"צלם סטילס ראשי"},
+ {id:"p2",c:"photo",t:"t",l:"צלם שני",q:"צלם סטילס שני"},
+ {id:"pw",c:"photo",t:"t",l:"צלמת לצד הנשים",q:"צלמת סטילס לצד הנשים"},
+ {id:"v1",c:"video",t:"t",l:"צלם וידאו ראשי",q:"צלם וידאו ראשי"},
+ {id:"v2",c:"video",t:"t",l:"צלם וידאו שני",q:"צלם וידאו שני"},
+ {id:"vw",c:"video",t:"t",l:"צלמת וידאו לצד הנשים",q:"צלמת וידאו לצד הנשים"},
+ {id:"camw",c:"video",t:"t",l:"מצלמה לצד הנשים (ללא צלם)",q:"מצלמה לצד הנשים (ללא צלם)"},
+ {id:"cam",c:"video",t:"n",l:"מצלמה נוספת ללא צלם",q1:"מצלמה נוספת (ללא צלם)",qn:"{n} מצלמות נוספות (ללא צלם)"},
+ {id:"drone",c:"video",t:"t",l:"רחף",q:"צילום רחף"},
+ {id:"prep",c:"more",t:"t",l:"צילום הכנות",q:"צילום הכנות"},
+ {id:"outP",c:"more",t:"t",g:"out",l:"צילומי חוץ – תמונות",q:"צילומי חוץ – תמונות בלבד"},
+ {id:"outB",c:"more",t:"t",g:"out",l:"צילומי חוץ + אלבום בוק",q:"צילומי חוץ – תמונות, כולל אלבום בוק"},
+ {id:"outV",c:"more",t:"t",g:"out",l:"צילומי חוץ – וידאו ותמונות",q:"צילומי חוץ – וידאו ותמונות"},
+ {id:"shulV",c:"more",t:"t",g:"shul",l:"בית כנסת – וידאו ותמונות",q:"צילום בבית הכנסת – וידאו ותמונות"},
+ {id:"shulP",c:"more",t:"t",g:"shul",l:"בית כנסת – תמונות",q:"צילום בבית הכנסת – תמונות בלבד"},
+ {id:"kotel",c:"more",t:"t",g:"kotel",l:"כותל – וידאו ותמונות",q:"צילום בכותל – וידאו ותמונות"},
+ {id:"kotelV",c:"more",t:"t",g:"kotel",l:"כותל – וידאו",q:"צילום בכותל – וידאו בלבד"},
+ {id:"kotelP",c:"more",t:"t",g:"kotel",l:"כותל – תמונות",q:"צילום בכותל – תמונות בלבד"},
+ {id:"clip",c:"edit",t:"t",l:"קליפ היילייטס",q:"קליפ היילייטס ערוך"},
+ {id:"reel",c:"edit",t:"t",l:"רילס לרשתות",q:"רילס קצר לרשתות"},
+ {id:"slide",c:"edit",t:"t",l:"מצגת תמונות למסך",q:"מצגת תמונות למסך באולם"},
+ {id:"screen",c:"edit",t:"t",l:"תוכן למסך באולם",q:"תוכן מעוצב למסך באולם"},
+ {id:"aDig",c:"album",t:"t",l:"אלבום דיגיטלי מ־300 תמונות",q:"אלבום דיגיטלי מ־300 תמונות"},
+ {id:"aPocket",c:"album",t:"t",l:"אלבום כיס עד 200 תמונות",q:"אלבום כיס עד 200 תמונות"},
+ {id:"aPar",c:"album",t:"n",l:"אלבומי הורים",q1:"אלבומי הורים",qn:"{n} אלבומי הורים"},
+ {id:"digital",c:"album",t:"t",l:"כל התמונות בקישור",q:"כל התמונות בקישור להורדה"},
+ {id:"usb",c:"deliv",t:"n",l:"דיסק און קי – וידאו ותמונות",q1:"דיסק און קי – וידאו ותמונות, הכל בפנים",qn:"{n} דיסק און קי – וידאו ותמונות, הכל בפנים"},
+ {id:"travel",c:"deliv",t:"t",l:"תוספת נסיעה (רחוק מהמרכז)",q:"כולל נסיעה"}
+];
+const MATS=[{id:"canvas",n:"קנבס"},{id:"glass",n:"זכוכית"},{id:"print",n:"הדפסה"}];
+const SIZES=["30/40","40/60","50/70","60/90"];
+const PRINTS=[];
+MATS.forEach(m=>SIZES.forEach(s=>PRINTS.push({id:"pr_"+m.id+"_"+s.replace("/","x"),c:"print",t:"n",l:"פורטרט "+s+" "+m.n,mat:m,size:s})));
+function printQ(it,n){return (n>1?n+" פורטרטים ":"פורטרט ")+it.size+(it.mat.id==="print"?" (הדפסה)":" על "+it.mat.n);}
+
+// ---------- state ----------
+let cfg={prices:{},custom:[],vat:18,vatIncl:false};         // shared: prices + own items + VAT
+let sel={ev:"",client:"",date:"",place:"",disc:"",q:{},extras:[],vatShow:"both"}; // this quote (this device)
+function lsGet(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function normCfg(v){return {prices:Object.assign({},v.prices||{}),custom:(v.custom||[]).slice(),vat:isFinite(Number(v.vat))&&v.vat!==""&&v.vat!=null?Number(v.vat):18,vatIncl:!!v.vatIncl};}
+const c0=lsGet("eh_cfg"); if(c0&&c0.prices) cfg=normCfg(c0);
+const s0=lsGet("eh_sel"); if(s0&&s0.q) sel=Object.assign(sel,s0);
+
+function allItems(){return BASE.concat(cfg.custom.map(x=>({id:x.id,c:x.c,t:"t",l:x.l,q:x.l,custom:true}))).concat(PRINTS);}
+function price(id){const v=Number(cfg.prices[id]);return isFinite(v)?v:0;}
+function hasPrice(id){return cfg.prices[id]!==undefined&&cfg.prices[id]!==""&&cfg.prices[id]!==null;}
+const nf=n=>Number(n||0).toLocaleString("he-IL");
+const $=id=>document.getElementById(id);
+function el(tag,attrs,txt){const e=document.createElement(tag);if(attrs)for(const k in attrs){if(k==="class")e.className=attrs[k];else e.setAttribute(k,attrs[k]);}if(txt!=null)e.textContent=txt;return e;}
+
+// ---------- quote screen ----------
+function renderEvents(){
+  const box=$("evTypes");box.textContent="";
+  EVENTS.forEach(ev=>{const b=el("button",{class:"chip","aria-pressed":String(sel.ev===ev),type:"button"},ev);
+    b.onclick=()=>{sel.ev=sel.ev===ev?"":ev;saveSel();renderEvents();renderOut();};box.appendChild(b);});
+}
+function setQty(it,n){
+  n=Math.max(0,Math.min(99,n));
+  if(n>0&&it.g){allItems().forEach(o=>{if(o.g===it.g&&o.id!==it.id)delete sel.q[o.id];});}
+  if(n===0)delete sel.q[it.id];else sel.q[it.id]=n;
+  saveSel();renderGroups();renderPrints();renderOut();
+}
+function priceTag(it){return hasPrice(it.id)?el("span",{class:"pr"},nf(price(it.id))+" ₪"):el("span",{class:"nop"},"אין מחיר");}
+function renderGroups(){
+  const box=$("groups");box.textContent="";
+  CATS.forEach(cat=>{
+    const items=allItems().filter(i=>i.c===cat.id);if(!items.length)return;
+    const s=el("section",{class:"grp"});s.appendChild(el("h2",null,cat.name));
+    const chips=el("div",{class:"chips"});const rows=el("div");
+    items.forEach(it=>{
+      const n=sel.q[it.id]||0;
+      if(it.t==="t"){
+        const b=el("button",{class:"chip",type:"button","aria-pressed":String(n>0)});
+        b.appendChild(el("span",null,it.l));b.appendChild(priceTag(it));
+        b.onclick=()=>setQty(it,n>0?0:1);chips.appendChild(b);
+      }else{
+        const r=el("div",{class:"qrow"+(n>0?" on":"")});
+        const nm=el("div",{class:"nm"},it.l);nm.appendChild(el("small",null,hasPrice(it.id)?nf(price(it.id))+" ₪ ליחידה":"אין מחיר"));
+        const st=el("div",{class:"step"});
+        const minus=el("button",{type:"button","aria-label":"פחות"},"−");minus.onclick=()=>setQty(it,n-1);
+        const plus=el("button",{type:"button","aria-label":"יותר"},"+");plus.onclick=()=>setQty(it,n+1);
+        st.append(plus,el("output",null,String(n)),minus);r.append(nm,st);rows.appendChild(r);
+      }
+    });
+    if(chips.children.length)s.appendChild(chips);
+    if(rows.children.length){rows.style.marginTop=chips.children.length?"8px":"0";s.appendChild(rows);}
+    box.appendChild(s);
+  });
+}
+function renderPrints(){
+  const t=$("prints");t.textContent="";
+  const hr=el("tr");hr.appendChild(el("th",null,""));SIZES.forEach(s=>hr.appendChild(el("th",null,s)));t.appendChild(hr);
+  MATS.forEach(m=>{
+    const tr=el("tr");tr.appendChild(el("td",null,m.n));
+    SIZES.forEach(s=>{
+      const it=PRINTS.find(p=>p.mat.id===m.id&&p.size===s);const n=sel.q[it.id]||0;
+      const td=el("td");const w=el("span",{class:"mini"+(n>0?" on":"")});
+      const p=el("button",{type:"button","aria-label":"יותר "+it.l},"+");p.onclick=()=>setQty(it,n+1);
+      const mi=el("button",{type:"button","aria-label":"פחות "+it.l},"−");mi.onclick=()=>setQty(it,n-1);
+      w.append(p,el("output",null,String(n)),mi);td.appendChild(w);tr.appendChild(td);
+    });t.appendChild(tr);
+  });
+}
+function renderExtras(){
+  const box=$("extras");box.textContent="";
+  sel.extras.forEach((x,i)=>{
+    const r=el("div",{class:"qrow on"});const nm=el("div",{class:"nm"},x.l);nm.appendChild(el("small",null,nf(x.p)+" ₪"));
+    const d=el("button",{class:"del",type:"button"},"מחק");d.onclick=()=>{sel.extras.splice(i,1);saveSel();renderExtras();renderOut();};
+    r.append(nm,d);box.appendChild(r);
+  });
+}
+function chosen(){
+  const out=[];
+  allItems().forEach(it=>{const n=sel.q[it.id]||0;if(!n)return;
+    let q;if(it.c==="print")q=printQ(it,n);else if(it.t==="n")q=n>1?it.qn.replace("{n}",n):it.q1;else q=it.q;
+    out.push({it,n,q,sum:price(it.id)*n,miss:!hasPrice(it.id)});});
+  return out;
+}
+function calc(){
+  const ch=chosen();let sum=ch.reduce((a,b)=>a+b.sum,0)+sel.extras.reduce((a,b)=>a+(Number(b.p)||0),0);
+  const disc=Number(sel.disc)||0;const final=Math.max(0,sum-disc);
+  const r=(Number(cfg.vat)||0)/100;
+  const before=cfg.vatIncl?Math.round(final/(1+r)):final;
+  const incl=cfg.vatIncl?final:Math.round(final*(1+r));
+  return {ch,sum,disc,final,before,incl,vatAmt:incl-before};
+}
+function quoteText(r){
+  const L=["הצעת מחיר – אליעזר הפקות"];
+  if(sel.client)L.push("לכבוד: "+sel.client);
+  if(sel.ev)L.push("אירוע: "+sel.ev);
+  if(sel.date)L.push("תאריך: "+sel.date);
+  if(sel.place)L.push("מקום: "+sel.place);
+  L.push("");L.push("החבילה כוללת:");
+  const lines=r.ch.filter(x=>x.it.id!=="travel").map(x=>"• "+x.q).concat(sel.extras.map(x=>"• "+x.l));
+  if(!lines.length)L.push("• (עוד לא נבחר כלום)");else L.push(...lines);
+  if(r.ch.some(x=>x.it.id==="travel"))L.push("• כולל נסיעה");
+  L.push("");
+  if(sel.vatShow==="incl")L.push("מחיר כולל מע״מ: "+nf(r.incl)+" ₪");
+  else if(sel.vatShow==="plus")L.push("מחיר: "+nf(r.before)+" ₪ + מע״מ");
+  else{L.push("מחיר לפני מע״מ: "+nf(r.before)+" ₪");L.push("מחיר כולל מע״מ: "+nf(r.incl)+" ₪");}
+  L.push("");L.push("אליעזר הפקות – צילום אירועים");L.push("050-6611106");
+  return L.join("\n");
+}
+function renderOut(){
+  const r=calc();
+  $("total").textContent=nf(r.incl)+" ₪";
+  $("totSub").textContent="לפני מע״מ: "+nf(r.before)+" ₪"+(r.disc?" · לפני הנחה "+nf(r.sum)+" ₪":"");
+  document.querySelectorAll("#vatShow .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.v===(sel.vatShow||"both"))));
+  const b=$("breakdown");b.textContent="";
+  r.ch.forEach(x=>{const d=el("div");d.appendChild(el("span",null,x.q));d.appendChild(el("span",x.miss?{class:"z"}:null,x.miss?"אין מחיר":nf(x.sum)+" ₪"));b.appendChild(d);});
+  sel.extras.forEach(x=>{const d=el("div");d.append(el("span",null,x.l),el("span",null,nf(x.p)+" ₪"));b.appendChild(d);});
+  if(r.disc){const d=el("div");d.append(el("span",null,"הנחה"),el("span",null,"−"+nf(r.disc)+" ₪"));b.appendChild(d);}
+  if(!b.children.length)b.appendChild(el("div",null,"בחר שירותים למעלה"));
+  else{
+    [["סה״כ לפני מע״מ",r.before],["מע״מ "+cfg.vat+"%",r.vatAmt],["סה״כ כולל מע״מ",r.incl]].forEach(([a,v],i)=>{
+      const d=el("div");d.style.fontWeight=i===1?"400":"800";if(i===0)d.style.borderTop="2px solid var(--line)";
+      d.append(el("span",null,a),el("span",null,nf(v)+" ₪"));b.appendChild(d);});
+  }
+  const miss=r.ch.filter(x=>x.miss);const w=$("warn");w.textContent="";
+  if(miss.length)w.appendChild(el("div",{class:"warnbox"},"שים לב: ל־"+miss.length+" פריטים אין מחיר (בלשונית מחירים). הסכום לא מלא."));
+  $("quote").textContent=quoteText(r);
+}
+function saveSel(){lsSet("eh_sel",sel);}
+function bindField(id,key){const f=$(id);f.value=sel[key]||"";f.addEventListener("input",()=>{sel[key]=f.value;saveSel();renderOut();});}
+bindField("fClient","client");bindField("fDate","date");bindField("fPlace","place");bindField("fDisc","disc");
+$("exAdd").onclick=()=>{const l=$("exName").value.trim();const p=Number($("exPrice").value)||0;if(!l)return;sel.extras.push({l,p});$("exName").value="";$("exPrice").value="";saveSel();renderExtras();renderOut();};
+$("reset").onclick=()=>{$("resetAsk").hidden=false;};
+$("resetNo").onclick=()=>{$("resetAsk").hidden=true;};
+$("resetYes").onclick=()=>{sel={ev:"",client:"",date:"",place:"",disc:"",q:{},extras:[],vatShow:sel.vatShow||"both"};calSel=null;saveSel();["fClient","fDate","fPlace","fDisc"].forEach(i=>$(i).value="");$("resetAsk").hidden=true;renderAll();toast("נוקה – הצעה חדשה");};
+function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>e.hidden=true,1800);}
+function doCopy(){
+  const txt=$("quote").textContent;
+  const fb=()=>{const r=document.createRange();r.selectNodeContents($("quote"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("הטקסט מסומן – העתק ידנית");};
+  try{navigator.clipboard.writeText(txt).then(()=>toast("ההצעה הועתקה ✓"),fb);}catch(e){fb();}
+}
+$("copy").onclick=doCopy;$("copy2").onclick=doCopy;
+document.querySelectorAll("#vatShow .chip").forEach(c=>c.onclick=()=>{sel.vatShow=c.dataset.v;saveSel();renderOut();});
+
+// ---------- calendar ----------
+function gem(n){
+  const ones=["","א","ב","ג","ד","ה","ו","ז","ח","ט"],tens=["","י","כ","ל","מ","נ","ס","ע","פ","צ"],hund=["","ק","ר","ש"];
+  let s="";n=n%1000;
+  while(n>=400){s+="ת";n-=400;}
+  if(n>=100){s+=hund[Math.floor(n/100)];n%=100;}
+  if(n===15)s+="טו";else if(n===16)s+="טז";else{s+=tens[Math.floor(n/10)];s+=ones[n%10];}
+  return s.length>1?s.slice(0,-1)+"״"+s.slice(-1):s+"׳";
+}
+let hebFmt=null;try{hebFmt=new Intl.DateTimeFormat("he-u-ca-hebrew",{day:"numeric",month:"long",year:"numeric"});}catch(e){}
+function heb(d){
+  if(!hebFmt)return null;
+  try{const p=hebFmt.formatToParts(d);const g=t=>(p.find(x=>x.type===t)||{}).value;
+    return {day:Number(g("day")),month:g("month"),year:Number(g("year"))};}catch(e){return null;}
+}
+const WD=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const GM=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+function dateText(d){
+  const h=heb(d);const g=d.getDate()+"."+(d.getMonth()+1)+"."+d.getFullYear();
+  let t=(d.getDay()===6?"":"יום ")+WD[d.getDay()]+", ";
+  if(h){t+=gem(h.day)+" "+h.month+" "+gem(h.year);
+    if(h.month==="תשרי"&&h.day<=2)t+=" (ראש השנה)";
+    else if(h.day===1||h.day===30)t+=" (ראש חודש)";
+    t+=" – ";}
+  return t+g;
+}
+let calM=new Date();calM.setDate(1);let calSel=sel.dateISO?new Date(sel.dateISO):null;
+function sameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function renderCal(){
+  const y=calM.getFullYear(),m=calM.getMonth();
+  $("calG").textContent=GM[m]+" "+y;
+  const first=new Date(y,m,1),last=new Date(y,m+1,0);
+  const h1=heb(first),h2=heb(last);
+  $("calH").textContent=h1?(h1.month===h2.month?h1.month+" "+gem(h1.year):h1.month+" – "+h2.month+" "+gem(h2.year)):"";
+  const g=$("calGrid");g.textContent="";
+  ["א","ב","ג","ד","ה","ו","ש"].forEach(w=>g.appendChild(el("div",{class:"wd"},w)));
+  for(let i=0;i<first.getDay();i++)g.appendChild(el("div"));
+  const today=new Date();
+  for(let day=1;day<=last.getDate();day++){
+    const d=new Date(y,m,day);const h=heb(d);
+    const cls=[];if(d.getDay()===6)cls.push("sat");if(h&&(h.day===1||h.day===30))cls.push("rh");if(sameDay(d,today))cls.push("today");if(sameDay(d,calSel))cls.push("sel");
+    const b=el("button",{type:"button",class:cls.join(" "),"aria-label":dateText(d)});
+    b.appendChild(el("span",{class:"g"},String(day)));
+    if(h)b.appendChild(el("span",{class:"h"},h.day===1?h.month:gem(h.day)));
+    b.onclick=()=>{calSel=d;sel.dateISO=y+"-"+String(m+1).padStart(2,"0")+"-"+String(day).padStart(2,"0")+"T12:00:00";sel.date=dateText(d);$("fDate").value=sel.date;saveSel();renderOut();closeCal();};
+    g.appendChild(b);
+  }
+}
+function openCal(){calM=calSel?new Date(calSel.getFullYear(),calSel.getMonth(),1):new Date(new Date().getFullYear(),new Date().getMonth(),1);renderCal();$("calWrap").hidden=false;}
+function closeCal(){$("calWrap").hidden=true;}
+$("calOpen").onclick=openCal;$("calClose").onclick=closeCal;
+$("calWrap").addEventListener("click",e=>{if(e.target===$("calWrap"))closeCal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCal();});
+$("calPrev").onclick=()=>{calM=new Date(calM.getFullYear(),calM.getMonth()-1,1);renderCal();};
+$("calNext").onclick=()=>{calM=new Date(calM.getFullYear(),calM.getMonth()+1,1);renderCal();};
+$("calToday").onclick=()=>{const t=new Date();calM=new Date(t.getFullYear(),t.getMonth(),1);renderCal();};
+let swX=null;$("calGrid").addEventListener("touchstart",e=>{swX=e.touches[0].clientX;},{passive:true});
+$("calGrid").addEventListener("touchend",e=>{if(swX==null)return;const dx=e.changedTouches[0].clientX-swX;swX=null;if(Math.abs(dx)>50){calM=new Date(calM.getFullYear(),calM.getMonth()+(dx<0?1:-1),1);renderCal();}});
+
+// ---------- prices screen ----------
+let saveT=null,lastUpd=null;
+const API="https://ndelumxaknembkdulbfl.supabase.co/functions/v1/quote-prices";
+let PIN=null;try{PIN=localStorage.getItem("eh_pin");}catch(e){}
+async function api(body){try{const r=await fetch(API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(Object.assign({pin:PIN},body))});const j=await r.json().catch(()=>({}));if(r.status===401){j.badPin=true;}return j;}catch(e){return null;}}
+function renderVat(){
+  if(document.activeElement!==$("vatRate"))$("vatRate").value=cfg.vat;
+  document.querySelectorAll("#vatMode .chip").forEach(c=>c.setAttribute("aria-pressed",String((c.dataset.v==="1")===!!cfg.vatIncl)));
+}
+$("vatRate").addEventListener("input",()=>{const v=$("vatRate").value.trim();cfg.vat=v===""?0:Number(v);saveCfg();renderOut();});
+document.querySelectorAll("#vatMode .chip").forEach(c=>c.onclick=()=>{cfg.vatIncl=c.dataset.v==="1";saveCfg();renderVat();renderOut();});
+function renderPrices(){
+  renderVat();
+  const box=$("plists");box.textContent="";
+  const groups=CATS.concat([{id:"print",name:"פורטרטים והגדלות"}]);
+  groups.forEach(cat=>{
+    const items=allItems().filter(i=>i.c===cat.id);if(!items.length)return;
+    box.appendChild(el("h2",{style:"font-size:.82rem;color:var(--muted);margin:14px 0 6px;font-weight:800"},cat.name));
+    const pl=el("div",{class:"plist"});
+    items.forEach(it=>{
+      const r=el("div",{class:"prow"});const nm=el("span",null,it.l);
+      if(it.custom){const d=el("button",{class:"del",type:"button"},"מחק");d.onclick=()=>{cfg.custom=cfg.custom.filter(x=>x.id!==it.id);delete cfg.prices[it.id];delete sel.q[it.id];saveSel();saveCfg();renderAll();};nm.appendChild(d);}
+      const inp=el("input",{type:"number",inputmode:"numeric",id:"price_"+it.id,placeholder:"₪"});
+      inp.value=hasPrice(it.id)?cfg.prices[it.id]:"";
+      inp.addEventListener("input",()=>{const v=inp.value.trim();if(v==="")delete cfg.prices[it.id];else cfg.prices[it.id]=Number(v);saveCfg();renderOut();});
+      r.append(nm,inp);pl.appendChild(r);
+    });
+    box.appendChild(pl);
+  });
+}
+function fillCatSelect(){const s=$("nCat");s.textContent="";CATS.forEach(c=>s.appendChild(el("option",{value:c.id},c.name)));}
+$("nAdd").onclick=()=>{const l=$("nName").value.trim();if(!l)return;const id="c"+Date.now().toString(36);cfg.custom.push({id,l,c:$("nCat").value});const p=$("nPrice").value.trim();if(p!=="")cfg.prices[id]=Number(p);$("nName").value="";$("nPrice").value="";saveCfg();renderAll();toast("נוסף לרשימה");};
+function setStatus(t){$("saveStatus").textContent=t;}
+function saveCfg(){
+  lsSet("eh_cfg",cfg);
+  if(!PIN){setStatus("נשמר במכשיר הזה");return;}
+  setStatus("שומר…");clearTimeout(saveT);
+  saveT=setTimeout(async()=>{const r=await api({action:"set",data:{prices:cfg.prices,custom:cfg.custom,vat:cfg.vat,vatIncl:cfg.vatIncl}});
+    if(r&&r.ok){lastUpd=r.updated_at;setStatus("נשמר ✓ (גם במחשב וגם בטלפון)");}else setStatus("לא נשמר באינטרנט – נשמר רק במכשיר הזה");},700);
+}
+
+// ---------- tabs ----------
+function tab(p){$("viewQ").hidden=p;$("viewP").hidden=!p;$("tabQ").setAttribute("aria-selected",String(!p));$("tabP").setAttribute("aria-selected",String(p));if(p)renderPrices();window.scrollTo(0,0);}
+$("tabQ").onclick=()=>tab(false);$("tabP").onclick=()=>tab(true);
+
+function renderAll(){renderEvents();renderGroups();renderPrints();renderExtras();renderOut();if(!$("viewP").hidden)renderPrices();}
+fillCatSelect();renderAll();
+setStatus("נשמר במכשיר הזה");
+
+// ---------- shared prices (phone + computer) ----------
+function applyRemote(v){cfg=normCfg(v);lsSet("eh_cfg",cfg);
+  const ae=document.activeElement;const editing=ae&&ae.id&&(ae.id.indexOf("price_")===0||ae.id==="vatRate");
+  renderEvents();renderGroups();renderPrints();renderOut();if(!$("viewP").hidden&&!editing)renderPrices();}
+async function pull(){
+  if(!PIN)return;
+  const r=await api({action:"get"});
+  if(r&&r.badPin){try{localStorage.removeItem("eh_pin")}catch(e){}PIN=null;showPin("הקוד לא נכון");return;}
+  if(!r||!r.data){setStatus("אין אינטרנט – מחירים מהמכשיר הזה");return;}
+  if(r.updated_at!==lastUpd&&!saveT_pending()){lastUpd=r.updated_at;applyRemote(r.data);}
+  setStatus("מסונכרן ✓ (גם במחשב וגם בטלפון)");
+}
+function saveT_pending(){return $("saveStatus").textContent==="שומר…";}
+function showPin(msg){$("pinErr").textContent=msg||"";$("pinWrap").hidden=false;setTimeout(()=>$("pinIn").focus(),50);}
+$("pinGo").onclick=async()=>{
+  const v=$("pinIn").value.trim();if(!v)return;
+  PIN=v;$("pinGo").disabled=true;$("pinErr").textContent="בודק…";
+  const r=await api({action:"get"});$("pinGo").disabled=false;
+  if(r&&r.badPin){PIN=null;$("pinErr").textContent="הקוד לא נכון";return;}
+  if(!r||!r.data){PIN=null;$("pinErr").textContent=(r&&r.error==="locked")?"יותר מדי ניסיונות – נסה בעוד 10 דקות":"אין חיבור לאינטרנט";return;}
+  try{localStorage.setItem("eh_pin",v)}catch(e){}
+  $("pinWrap").hidden=true;$("pinIn").value="";lastUpd=r.updated_at;applyRemote(r.data);setStatus("מסונכרן ✓ (גם במחשב וגם בטלפון)");
+};
+$("pinIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("pinGo").click();});
+$("pinChange").onclick=async()=>{
+  const v=$("pinNew").value.trim();if(!/^\d{4,8}$/.test(v)){toast("קוד של 4 עד 8 ספרות");return;}
+  const r=await api({action:"setpin",newPin:v});
+  if(r&&r.ok){PIN=v;try{localStorage.setItem("eh_pin",v)}catch(e){}$("pinNew").value="";toast("הקוד הוחלף ✓");}else toast("לא הצליח – נסה שוב");
+};
+if(PIN)pull();else showPin("");
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)pull();});
+setInterval(()=>{if(!document.hidden)pull();},30000);
+})();
+</script>
+
+</body>
+</html>
