@@ -432,12 +432,19 @@ try {
     foreach ($p in @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('Programs'))) {
         if (-not $p -or -not (Test-Path -LiteralPath $p)) { continue }
         $lnkPath = Join-Path $p 'Запись флешек.lnk'
-        $s = $sh.CreateShortcut($lnkPath)
-        $s.TargetPath = $psExe
-        $s.Arguments = '-NoProfile -ExecutionPolicy Bypass -STA -WindowStyle Hidden -File "' + $dst + '"'
-        $s.WorkingDirectory = $dir
-        $s.IconLocation = $icon
-        $s.Save()
+        $tmpLnk  = Join-Path $p 'FlashWriter-tmp.lnk'
+        try {
+            $s = $sh.CreateShortcut($tmpLnk)
+            $s.TargetPath = $psExe
+            $s.Arguments = '-NoProfile -ExecutionPolicy Bypass -STA -WindowStyle Hidden -File "' + $dst + '"'
+            $s.WorkingDirectory = $dir
+            $s.IconLocation = $icon
+            $s.Save()
+            Move-Item -LiteralPath $tmpLnk -Destination $lnkPath -Force
+        } catch {
+            Write-Host ('  Ярлык не получился в ' + $p + ': ' + $_.Exception.Message) -ForegroundColor Red
+            continue
+        }
         Write-Host "  3) Ярлык: $lnkPath"
     }
     Write-Host ''

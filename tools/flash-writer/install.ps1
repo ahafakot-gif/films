@@ -38,13 +38,15 @@ try {
     foreach ($p in $places) {
         if (-not $p -or -not (Test-Path -LiteralPath $p)) { continue }
         $lnkPath = Join-Path $p 'Запись флешек.lnk'
-        $s = $sh.CreateShortcut($lnkPath)
+        $tmpLnk = Join-Path $p 'FlashWriter-tmp.lnk'
+        $s = $sh.CreateShortcut($tmpLnk)
         $s.TargetPath = $psExe
         $s.Arguments = '-NoProfile -ExecutionPolicy Bypass -STA -WindowStyle Hidden -File "' + $dst + '"'
         $s.WorkingDirectory = $dir
         $s.IconLocation = $icon
         $s.Description = 'Запись флешек — אליעזר הפקות'
         $s.Save()
+        Move-Item -LiteralPath $tmpLnk -Destination $lnkPath -Force
         if (Test-Path -LiteralPath $lnkPath) { $made += $lnkPath }
     }
     if ($made.Count -eq 0) { throw 'Не удалось создать ярлык на рабочем столе.' }
