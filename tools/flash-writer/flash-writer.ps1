@@ -157,6 +157,12 @@ $Worker = {
     param($Letter, $Label, $Files, $Dirs, $Lock, $Verify, $State, $Log)
     $ErrorActionPreference = 'Stop'
     function L([string]$m) { [void]$Log.Add(('{0}  {1}:  {2}' -f (Get-Date -Format 'HH:mm:ss'), $Letter, $m)) }
+    # Внешние команды (icacls, diskpart): их сообщения в stderr — не авария
+    function Run-Exe([string]$exe, [string[]]$exeArgs) {
+        $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+        try { $o = & $exe @exeArgs 2>&1 | ForEach-Object { "$_" } | Out-String } finally { $ErrorActionPreference = $old }
+        return $o
+    }
     try {
         Import-Module Storage -ErrorAction SilentlyContinue
         $root = "$($Letter):\"
@@ -194,7 +200,7 @@ $Worker = {
                     "assign letter=$Letter"
                 )
                 [IO.File]::WriteAllLines($dp, $dpLines, [Text.Encoding]::ASCII)
-                $out = & diskpart.exe /s $dp 2>&1 | Out-String
+                $out = Run-Exe 'diskpart.exe' @('/s', $dp)
                 Remove-Item -LiteralPath $dp -Force -ErrorAction SilentlyContinue
                 L ('diskpart: ' + (($out -split "`r?`n" | Where-Object { $_.Trim() } | Select-Object -Last 2) -join ' / '))
             } finally { $m.ReleaseMutex() }
@@ -246,9 +252,9 @@ $Worker = {
         # --- закрыть от записи: всем только чтение, без права менять и удалять
         if ($Lock) {
             $State.Stage = 'Закрываю от записи'
-            & icacls.exe $root /inheritance:r /grant:r '*S-1-1-0:(OI)(CI)(RX)' /Q | Out-Null
-            & icacls.exe $root /remove:g '*S-1-5-32-544' '*S-1-5-18' '*S-1-5-11' '*S-1-5-32-545' '*S-1-3-0' /Q | Out-Null
-            & icacls.exe "$($Letter):\*" /reset /T /C /Q 2>&1 | Out-Null
+            [void](Run-Exe 'icacls.exe' @($root, '/inheritance:r', '/grant:r', '*S-1-1-0:(OI)(CI)(RX)', '/Q'))
+            [void](Run-Exe 'icacls.exe' @($root, '/remove:g', '*S-1-5-32-544', '*S-1-5-18', '*S-1-5-11', '*S-1-5-32-545', '*S-1-3-0', '/Q'))
+            [void](Run-Exe 'icacls.exe' @("$($Letter):\*", '/reset', '/T', '/C', '/Q'))
             try { Write-VolumeCache -DriveLetter $Letter } catch {}
             # проверка защиты: пробуем записать и удалить
             $t = Join-Path $root ('__test_' + [guid]::NewGuid().ToString('N') + '.tmp')
