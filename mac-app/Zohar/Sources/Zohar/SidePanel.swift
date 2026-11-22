@@ -335,8 +335,10 @@ struct XYPad: View {
             }
             .contentShape(Rectangle())
             .gesture(DragGesture(minimumDistance: 0).onChanged { g in
-                x = min(max(g.location.x / w, 0), 1)
-                y = min(max(1 - g.location.y / h, 0), 1)
+                let nx = Double(g.location.x / w)
+                let ny = 1.0 - Double(g.location.y / h)
+                x = min(max(nx, 0), 1)
+                y = min(max(ny, 0), 1)
             })
         }
         .environment(\.layoutDirection, .leftToRight)

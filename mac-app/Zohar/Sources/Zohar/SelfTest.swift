@@ -86,7 +86,8 @@ enum SelfTest {
         c.selection = [1, 2, 3, 4]
         c.addEffect(.dimChase, bpm: 60, size: 1, spread: 1, steps: 2)
         u = dmx()
-        let d = [u[1]?[0] ?? 0, u[1]?[6] ?? 0, u[1]?[12] ?? 0, u[1]?[18] ?? 0]
+        let row: [UInt8] = u[1] ?? []
+        let d: [UInt8] = row.count >= 19 ? [row[0], row[6], row[12], row[18]] : [0, 0, 0, 0]
         check("2-step chase alternates", (d[0] == d[2]) && (d[1] == d[3]) && (d[0] != d[1]), "\(d)")
         c.clearProgrammer(); c.clearProgrammer()
 
