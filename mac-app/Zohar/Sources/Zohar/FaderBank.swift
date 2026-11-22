@@ -40,7 +40,19 @@ struct FaderStrip: View {
         let active = cuelistID.map { c.isActive($0) } ?? false
         VStack(spacing: 5) {
             HStack(spacing: 2) {
-                if c.recordMode {
+                if c.midiLearn {
+                    Button {
+                        c.learnTarget = .fader(index)
+                    } label: {
+                        Text(c.learnTarget == .fader(index) ? "…" : "MIDI \(index + 1)")
+                            .font(.system(size: 10, weight: .heavy))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 3)
+                            .background(RoundedRectangle(cornerRadius: 4).fill(Color.purple))
+                            .foregroundStyle(.white)
+                    }
+                    .buttonStyle(.plain)
+                } else if c.recordMode {
                     Button {
                         c.record(toFader: index)
                     } label: {

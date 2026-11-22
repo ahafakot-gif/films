@@ -34,7 +34,7 @@ struct SlotButton: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(cl == nil ? Color.primary.opacity(0.04) : (active ? color.opacity(0.9) : color.opacity(0.16)))
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .strokeBorder(c.recordMode ? Color.red.opacity(0.7) : (active ? Color.white.opacity(0.7) : color.opacity(cl == nil ? 0.15 : 0.5)),
+                .strokeBorder(c.learnTarget == .button(page: page ?? c.page, slot: slot) ? Color.purple : c.recordMode ? Color.red.opacity(0.7) : (active ? Color.white.opacity(0.7) : color.opacity(cl == nil ? 0.15 : 0.5)),
                               lineWidth: active ? 2 : 1)
             if let cl {
                 VStack(alignment: .leading, spacing: 2) {
@@ -82,6 +82,10 @@ struct SlotButton: View {
         .contextMenu {
             if let cl {
                 Button(c.t("cl.edit")) { c.sheet = .cuelist(cl.id) }
+                Button(c.t("midi.learnThis")) {
+                    c.midiLearn = true
+                    c.learnTarget = .button(page: page ?? c.page, slot: slot)
+                }
                 Menu(c.t("cl.mode")) {
                     ForEach(ButtonMode.allCases) { m in
                         Button(c.t("mode.\(m.rawValue)")) { update(cl.id) { $0.mode = m } }
@@ -116,7 +120,9 @@ struct SlotButton: View {
     }
 
     private func down(_ cl: Cuelist?) {
-        if c.recordMode {
+        if c.midiLearn {
+            c.learnTarget = .button(page: page ?? c.page, slot: slot)
+        } else if c.recordMode {
             c.record(toSlot: slot, page: page)
         } else if let cl {
             c.buttonDown(cl.id)

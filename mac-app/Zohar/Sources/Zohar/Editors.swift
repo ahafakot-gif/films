@@ -240,6 +240,25 @@ struct SettingsView: View {
                 }
             }
 
+            Divider()
+            HStack {
+                Text("MIDI").font(.headline)
+                Text(c.midiDevices.isEmpty ? c.t("midi.noDevices") : c.midiDevices.joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button(c.t("midi.learnGM")) { c.midiLearn = true; c.learnTarget = .grandMaster; dismiss() }
+                Button(c.t("midi.learnBO")) { c.midiLearn = true; c.learnTarget = .blackout; dismiss() }
+                Button { c.refreshMIDI() } label: { Image(systemName: "arrow.clockwise") }
+                Button(c.t("midi.clear"), role: .destructive) { c.show.midiMaps.removeAll() }
+                    .disabled(c.show.midiMaps.isEmpty)
+            }
+            if !c.show.midiMaps.isEmpty {
+                Text(c.show.midiMaps.map { "\($0.kind == .note ? "Note" : "CC") \($0.number) → \(c.midiLabel($0.target))" }.joined(separator: "   ·   "))
+                    .font(.caption)
+                    .lineLimit(3)
+            }
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(c.t("set.help1")).font(.caption)
                 Text(c.t("set.help2")).font(.caption)
@@ -248,7 +267,7 @@ struct SettingsView: View {
             .foregroundStyle(.secondary)
         }
         .padding(20)
-        .frame(width: 980, height: 560)
+        .frame(width: 980, height: 640)
         .onChange(of: c.show.outputs) { _ in c.applyOutputs() }
     }
 }

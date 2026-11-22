@@ -275,6 +275,7 @@ struct Show: Codable {
     var buttons: [Int: UUID] = [:]
     var faders: [FaderSlot] = Show.defaultFaders
     var outputs: [OutputConfig] = [OutputConfig()]
+    var midiMaps: [MIDIMap] = []
 
     static var defaultFaders: [FaderSlot] {
         var f = Array(repeating: FaderSlot(), count: 10)
@@ -286,7 +287,7 @@ struct Show: Codable {
     init() {}
 
     enum CodingKeys: String, CodingKey {
-        case name, profiles, fixtures, groups, cuelists, buttons, faders, outputs
+        case name, profiles, fixtures, groups, cuelists, buttons, faders, outputs, midiMaps
     }
 
     // Tolerant decoding: missing fields fall back to defaults, so older show files keep opening.
@@ -300,8 +301,32 @@ struct Show: Codable {
         buttons = (try? c.decode([Int: UUID].self, forKey: .buttons)) ?? [:]
         faders = (try? c.decode([FaderSlot].self, forKey: .faders)) ?? Show.defaultFaders
         outputs = (try? c.decode([OutputConfig].self, forKey: .outputs)) ?? [OutputConfig()]
+        midiMaps = (try? c.decode([MIDIMap].self, forKey: .midiMaps)) ?? []
         while faders.count < 10 { faders.append(FaderSlot()) }
     }
+}
+
+// MARK: - Color matrix
+
+struct MatrixColor {
+    let name: String
+    let r: Double, g: Double, b: Double, w: Double
+    var color: Color { Color(red: r, green: g, blue: b) }
+
+    static let all: [MatrixColor] = [
+        MatrixColor(name: "Red", r: 1, g: 0, b: 0, w: 0),
+        MatrixColor(name: "Orange", r: 1, g: 0.45, b: 0, w: 0),
+        MatrixColor(name: "Yellow", r: 1, g: 0.85, b: 0, w: 0),
+        MatrixColor(name: "Green", r: 0, g: 1, b: 0, w: 0),
+        MatrixColor(name: "Turquoise", r: 0, g: 1, b: 0.6, w: 0),
+        MatrixColor(name: "Cyan", r: 0, g: 1, b: 1, w: 0),
+        MatrixColor(name: "Blue", r: 0, g: 0, b: 1, w: 0),
+        MatrixColor(name: "Lavender", r: 0.55, g: 0.35, b: 1, w: 0),
+        MatrixColor(name: "Magenta", r: 1, g: 0, b: 1, w: 0),
+        MatrixColor(name: "Pink", r: 1, g: 0.3, b: 0.55, w: 0),
+        MatrixColor(name: "CTO", r: 1, g: 0.7, b: 0.35, w: 0.6),
+        MatrixColor(name: "White", r: 1, g: 1, b: 1, w: 1),
+    ]
 }
 
 // MARK: - Colors for buttons / groups

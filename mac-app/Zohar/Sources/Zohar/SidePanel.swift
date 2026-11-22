@@ -10,10 +10,11 @@ struct SidePanel: View {
                 Picker("", selection: $tab) {
                     Text(c.t("side.groups")).tag(0)
                     Text(c.t("side.fixtures")).tag(1)
+                    Text(c.t("side.colors")).tag(2)
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(width: 240)
+                .frame(width: 320)
                 Spacer()
                 Text(c.selection.isEmpty ? c.t("sel.none") : "\(c.t("sel.count")): \(c.selection.count)")
                     .font(.caption.bold())
@@ -25,7 +26,7 @@ struct SidePanel: View {
             .padding(10)
 
             Group {
-                if tab == 0 { GroupsGrid() } else { FixturesGrid() }
+                if tab == 0 { GroupsGrid() } else if tab == 1 { FixturesGrid() } else { ColorMatrixView() }
             }
             .frame(height: 250)
 

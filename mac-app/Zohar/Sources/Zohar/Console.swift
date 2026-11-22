@@ -56,6 +56,12 @@ final class Console: ObservableObject {
     @Published var secondScreenOpen = false
     @Published var secondMode = 0      // 0 = groups + programmer, 1 = playback page
     @Published var page2 = 1
+    /// Color matrix: group → color index (applied above playbacks, below programmer)
+    @Published var groupColors: [UUID: Int] = [:]
+    @Published var midiLearn = false
+    @Published var learnTarget: MIDITarget? = nil
+    @Published var midiDevices: [String] = []
+    private let midi = MIDIInput()
 
     @Published var lang: Lang { didSet { UserDefaults.standard.set(lang.rawValue, forKey: "lang") } }
     @Published var theme: Theme { didSet { UserDefaults.standard.set(theme.rawValue, forKey: "theme") } }
@@ -89,6 +95,11 @@ final class Console: ObservableObject {
         }
         RunLoop.main.add(t, forMode: .common)
         timer = t
+        midi.onMessage = { [weak self] m in
+            Task { @MainActor in self?.handleMIDI(m) }
+        }
+        midi.start()
+        midiDevices = midi.sourceNames
     }
 
     func t(_ key: String) -> String { Strings.get(key, lang) }
@@ -216,6 +227,16 @@ final class Console: ObservableObject {
             for e in cue.effects { applyFX(e, &out, t, scale: lvl) }
         }
 
+        // Color matrix
+        for (gid, ci) in groupColors {
+            guard let g = group(gid), MatrixColor.all.indices.contains(ci) else { continue }
+            let mc = MatrixColor.all[ci]
+            for fid in g.fixtureIDs {
+                guard out[fid] != nil, let p = profiles[fid] else { continue }
+                Console.applyColor(mc, to: &out[fid]!, profile: p)
+            }
+        }
+
         // Programmer
         for (fid, attrs) in programmer where out[fid] != nil {
             for (attr, v) in attrs { out[fid]![attr] = v }
@@ -294,6 +315,67 @@ final class Console: ObservableObject {
                 }
                 if out[fid]![.white] != nil { out[fid]![.white] = (out[fid]![.white] ?? 0) * (1 - scale) }
             }
+        }
+    }
+
+    static func applyColor(_ mc: MatrixColor, to a: inout AttrValues, profile p: FixtureProfile) {
+        if p.attrs.contains(.red) {
+            a[.red] = mc.r; a[.green] = mc.g; a[.blue] = mc.b
+            if p.attrs.contains(.white) { a[.white] = mc.w }
+            if p.attrs.contains(.amber) { a[.amber] = 0 }
+            if p.attrs.contains(.uv) { a[.uv] = 0 }
+        } else if p.attrs.contains(.cyan) {
+            a[.cyan] = 1 - mc.r; a[.magenta] = 1 - mc.g; a[.yellow] = 1 - mc.b
+        }
+    }
+
+    func toggleGroupColor(_ gid: UUID, _ ci: Int) {
+        if groupColors[gid] == ci { groupColors[gid] = nil } else { groupColors[gid] = ci }
+    }
+
+    // MARK: MIDI
+
+    func refreshMIDI() {
+        midi.connectAll()
+        midiDevices = midi.sourceNames
+    }
+
+    func handleMIDI(_ m: MIDIMessage) {
+        if midiLearn, let target = learnTarget {
+            show.midiMaps.removeAll { $0.target == target || ($0.kind == m.kind && $0.channel == m.channel && $0.number == m.number) }
+            show.midiMaps.append(MIDIMap(kind: m.kind, channel: m.channel, number: m.number, target: target))
+            learnTarget = nil
+            flash("MIDI ✓ \(m.kind == .note ? "Note" : "CC") \(m.number)")
+            return
+        }
+        guard let map = show.midiMaps.first(where: { $0.kind == m.kind && $0.channel == m.channel && $0.number == m.number }) else { return }
+        switch map.target {
+        case .button(let p, let slot):
+            guard let cl = cuelistAt(slot: slot, page: p) else { return }
+            if m.isOn { buttonDown(cl.id) } else { buttonUp(cl.id) }
+        case .fader(let i):
+            if m.kind == .cc {
+                setFader(i, Double(m.value) / 127)
+            } else {
+                faderFlash(i, down: m.isOn)
+            }
+        case .grandMaster:
+            if m.kind == .cc { grandMaster = Double(m.value) / 127 }
+        case .blackout:
+            if m.kind == .cc {
+                blackout = m.isOn
+            } else if m.isOn {
+                blackout.toggle()
+            }
+        }
+    }
+
+    func midiLabel(_ target: MIDITarget) -> String {
+        switch target {
+        case .button(let p, let s): return "\(t("ui.page")) \(p + 1) · #\(s + 1)"
+        case .fader(let i): return "Fader \(i + 1)"
+        case .grandMaster: return "Grand Master"
+        case .blackout: return "Blackout"
         }
     }
 

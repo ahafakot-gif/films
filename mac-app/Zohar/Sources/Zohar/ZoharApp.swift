@@ -125,6 +125,11 @@ struct TopBar: View {
             BarButton(title: "Clear", icon: "xmark.circle", on: !c.programmerEmpty, color: .orange) { c.clearProgrammer() }
                 .keyboardShortcut(.escape, modifiers: [])
             BarButton(title: "Release", icon: "stop.circle", on: false, color: .gray) { c.releaseAll() }
+            BarButton(title: "MIDI", icon: "pianokeys", on: c.midiLearn, color: .purple) {
+                c.midiLearn.toggle()
+                c.learnTarget = nil
+            }
+            .help(c.t("midi.help"))
 
             Spacer(minLength: 8)
 
@@ -135,6 +140,10 @@ struct TopBar: View {
                     .padding(.vertical, 4)
                     .background(Capsule().fill(Color.accentColor.opacity(0.25)))
                     .transition(.opacity)
+            } else if c.midiLearn {
+                Text(c.learnTarget.map { "\(c.t("midi.waiting")): \(c.midiLabel($0))" } ?? c.t("midi.hint"))
+                    .font(.callout.bold())
+                    .foregroundStyle(.purple)
             } else if c.recordMode {
                 Text(c.t("rec.hint"))
                     .font(.callout.bold())
@@ -150,6 +159,8 @@ struct TopBar: View {
             }
             .buttonStyle(.borderless)
 
+            Divider().frame(height: 26)
+            BigClock(size: 15)
             Divider().frame(height: 26)
 
             HStack(spacing: 5) {
@@ -193,6 +204,7 @@ struct BarButton: View {
 
 struct SecondScreenView: View {
     @EnvironmentObject var c: Console
+    @AppStorage("showClock") private var showClock = true
 
     var body: some View {
         VStack(spacing: 0) {
@@ -200,10 +212,12 @@ struct SecondScreenView: View {
                 Picker("", selection: $c.secondMode) {
                     Text(c.t("s2.programmer")).tag(0)
                     Text(c.t("s2.buttons")).tag(1)
+                    Text(c.t("side.colors")).tag(2)
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(width: 340)
+                .frame(width: 440)
+                Toggle(c.t("s2.clock"), isOn: $showClock).toggleStyle(.checkbox)
                 if c.secondMode == 1 {
                     HStack(spacing: 4) {
                         Button { c.page2 = (c.page2 - 1 + Console.pages) % Console.pages } label: { Image(systemName: "chevron.left") }
@@ -220,10 +234,19 @@ struct SecondScreenView: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
             Divider()
+            if showClock {
+                BigClock(size: 72)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+                    .background(Color.black.opacity(0.35))
+                Divider()
+            }
             if c.secondMode == 0 {
                 SidePanel()
-            } else {
+            } else if c.secondMode == 1 {
                 PlaybackGrid(page: c.page2)
+            } else {
+                ColorMatrixView()
             }
         }
         .background(WindowPlacer())
