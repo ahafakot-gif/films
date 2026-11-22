@@ -90,16 +90,16 @@ if (-not (Test-Admin)) {
     exit
 }
 
-$preDrives = @(); $preFolder = $null; $preFiles = @()
+$preDrives = @(); $preFolders = @(); $preFiles = @()
 foreach ($line in $items) {
     $k, $p = $line -split '\|', 2
     switch ($k) {
         'drive'  { if ($p) { $preDrives += $p.Substring(0, 1).ToUpper() } }
-        'folder' { if (-not $preFolder -and $p) { $preFolder = $p.TrimEnd('"') } }
+        'folder' { if ($p) { $preFolders += $p.TrimEnd('"') } }
         'file'   { if ($p) { $preFiles += $p } }
     }
 }
-if ($preFiles.Count -gt 0 -and -not $preFolder) { $preFolder = Split-Path -Parent $preFiles[0] }
+foreach ($pf in $preFiles) { $par = Split-Path -Parent $pf; if ($preFolders -notcontains $par) { $preFolders += $par } }
 
 # ---------------------------------------------------------------------------
 # Вспомогательные функции
@@ -293,7 +293,7 @@ $fontBig  = New-Object Drawing.Font('Segoe UI', 14, [Drawing.FontStyle]::Bold)
 
 $form = New-Object Windows.Forms.Form
 $form.Text = $AppTitle
-$form.Size = New-Object Drawing.Size(940, 820)
+$form.Size = New-Object Drawing.Size(940, 860)
 $form.MinimumSize = $form.Size
 $form.StartPosition = 'CenterScreen'
 $form.Font = $font
@@ -318,42 +318,42 @@ $chkFixed = New-Ctl CheckBox 16 152 700 24 'Показать и USB-диски, 
 $chkFixed.ForeColor = [Drawing.Color]::DarkRed
 
 # --- 2. Папка работы
-$lblFolder = New-Ctl Label 16 186 600 24 '2. Папка работы'
+$lblFolder = New-Ctl Label 16 186 890 24 '2. Папки работы (можно несколько, из разных мест; можно перетащить мышкой)'
 $lblFolder.Font = $fontBold
-$txtFolder = New-Ctl TextBox 16 214 780 28
-$txtFolder.ReadOnly = $true
-$btnFolder = New-Ctl Button 806 212 100 32 'Выбрать…'
-$lblName = New-Ctl Label 16 252 170 24 'Название флешки:'
-$txtLabel = New-Ctl TextBox 186 250 450 28
+$lstFolders = New-Ctl ListBox 16 214 780 66
+$btnFolder = New-Ctl Button 806 212 100 32 'Добавить…'
+$btnFolderDel = New-Ctl Button 806 248 100 32 'Убрать'
+$lblName = New-Ctl Label 16 292 170 24 'Название флешки:'
+$txtLabel = New-Ctl TextBox 186 290 450 28
 $txtLabel.MaxLength = 32
-$lblNameHint = New-Ctl Label 646 252 270 24 '(до 32 знаков, берётся из папки)'
+$lblNameHint = New-Ctl Label 646 292 270 24 '(до 32 знаков, из первой папки)'
 $lblNameHint.ForeColor = [Drawing.Color]::Gray
 
 # --- 3. Что записать
-$lblFiles = New-Ctl Label 16 290 600 24 '3. Что записать на флешки (отметьте галочками)'
+$lblFiles = New-Ctl Label 16 330 600 24 '3. Что записать на флешки (отметьте галочками)'
 $lblFiles.Font = $fontBold
-$clbFiles = New-Ctl CheckedListBox 16 318 780 200
+$clbFiles = New-Ctl CheckedListBox 16 358 780 200
 $clbFiles.CheckOnClick = $true
-$btnAll  = New-Ctl Button 806 318 100 32 'Все'
-$btnNone = New-Ctl Button 806 356 100 32 'Ни одного'
-$lblTotal = New-Ctl Label 16 522 890 24 'Выбрано: 0'
+$btnAll  = New-Ctl Button 806 358 100 32 'Все'
+$btnNone = New-Ctl Button 806 396 100 32 'Ни одного'
+$lblTotal = New-Ctl Label 16 562 890 24 'Выбрано: 0'
 
 # --- Настройки
-$chkLock   = New-Ctl CheckBox 16 552 420 24 'Закрыть флешки от записи и удаления'
+$chkLock   = New-Ctl CheckBox 16 592 420 24 'Закрыть флешки от записи и удаления'
 $chkLock.Checked = $true
-$chkVerify = New-Ctl CheckBox 440 552 220 24 'Проверить запись'
+$chkVerify = New-Ctl CheckBox 440 592 220 24 'Проверить запись'
 $chkVerify.Checked = $true
-$chkEject  = New-Ctl CheckBox 660 552 250 24 'Извлечь флешки в конце'
+$chkEject  = New-Ctl CheckBox 660 592 250 24 'Извлечь флешки в конце'
 $chkEject.Checked = $true
 
-$btnStart = New-Ctl Button 16 584 890 52 'СТАРТ — форматировать и записать'
+$btnStart = New-Ctl Button 16 624 890 52 'СТАРТ — форматировать и записать'
 $btnStart.Font = $fontBig
 $btnStart.BackColor = [Drawing.Color]::FromArgb(214, 173, 85)
 $btnStart.FlatStyle = 'Flat'
 
-$pnlProgress = New-Ctl Panel 16 644 890 70
+$pnlProgress = New-Ctl Panel 16 684 890 70
 $pnlProgress.AutoScroll = $true
-$txtLog = New-Ctl TextBox 16 718 890 54
+$txtLog = New-Ctl TextBox 16 758 890 54
 $txtLog.Multiline = $true
 $txtLog.ScrollBars = 'Vertical'
 $txtLog.ReadOnly = $true
@@ -385,30 +385,52 @@ function Refresh-Drives {
     else { $lblDrives.Text = '1. Флешки (только USB-флешки, жёсткие диски не показываются)' }
 }
 
-function Load-Folder([string]$folder) {
+$script:folders = New-Object Collections.ArrayList
+
+function Add-Folder([string]$folder) {
+    if (-not $folder -or -not (Test-Path -LiteralPath $folder -PathType Container)) { return }
+    $folder = $folder.TrimEnd('\')
+    if ($folder.Length -eq 2) { $folder += '\' }
+    foreach ($f in $script:folders) { if ($f -eq $folder) { return } }
+    [void]$script:folders.Add($folder)
+    if ($script:folders.Count -eq 1) { $txtLabel.Text = Get-CleanLabel (Split-Path -Leaf $folder) }
+    $s = Get-Settings; $s.LastFolder = $folder; Save-Settings $s
+    Reload-Content
+}
+
+function Reload-Content {
+    # запомнить, что было отмечено
+    $keep = @{}
+    for ($i = 0; $i -lt $clbFiles.Items.Count; $i++) { if ($clbFiles.GetItemChecked($i)) { $keep[$script:fileObjs[$i].Item.FullName] = $true } }
+    foreach ($pf in $preFiles) { $keep[$pf] = $true }
+    $script:preFiles = @()
+
+    $lstFolders.Items.Clear()
+    foreach ($f in $script:folders) { [void]$lstFolders.Items.Add($f) }
     $clbFiles.Items.Clear()
     $script:fileObjs = @()
-    if (-not $folder -or -not (Test-Path -LiteralPath $folder -PathType Container)) { Update-Total; return }
-    $txtFolder.Text = $folder
-    $txtLabel.Text = Get-CleanLabel (Split-Path -Leaf $folder)
     $form.Cursor = 'WaitCursor'
-    $children = @(Get-ChildItem -LiteralPath $folder -Force | Where-Object {
-        -not ($_.Attributes -band [IO.FileAttributes]::System) -and $_.Name -notin @('Thumbs.db', 'desktop.ini')
-    } | Sort-Object @{ e = { -not $_.PSIsContainer } }, Name)
-    foreach ($c in $children) {
-        if ($c.PSIsContainer) {
-            $size = (Get-ChildItem -LiteralPath $c.FullName -Recurse -File -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
-            $text = '[папка]  {0}     ({1})' -f $c.Name, (Format-Size ([double]$size))
-        } else {
-            $size = $c.Length
-            $text = '{0}     ({1})' -f $c.Name, (Format-Size ([double]$size))
+    $multi = ($script:folders.Count -gt 1)
+    foreach ($folder in $script:folders) {
+        $from = Split-Path -Leaf $folder
+        $children = @(Get-ChildItem -LiteralPath $folder -Force -ErrorAction SilentlyContinue | Where-Object {
+            -not ($_.Attributes -band [IO.FileAttributes]::System) -and $_.Name -notin @('Thumbs.db', 'desktop.ini')
+        } | Sort-Object @{ e = { -not $_.PSIsContainer } }, Name)
+        foreach ($c in $children) {
+            if ($c.PSIsContainer) {
+                $size = (Get-ChildItem -LiteralPath $c.FullName -Recurse -File -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
+                $text = '[папка]  {0}     ({1})' -f $c.Name, (Format-Size ([double]$size))
+            } else {
+                $size = $c.Length
+                $text = '{0}     ({1})' -f $c.Name, (Format-Size ([double]$size))
+            }
+            if ($multi) { $text = "‹$from›   " + $text }
+            $script:fileObjs += [pscustomobject]@{ Item = $c; Size = [double]$size }
+            $idx = $clbFiles.Items.Add($text)
+            if ($keep.ContainsKey($c.FullName)) { $clbFiles.SetItemChecked($idx, $true) }
         }
-        $script:fileObjs += [pscustomobject]@{ Item = $c; Size = [double]$size }
-        $idx = $clbFiles.Items.Add($text)
-        if ($preFiles -contains $c.FullName) { $clbFiles.SetItemChecked($idx, $true) }
     }
     $form.Cursor = 'Default'
-    $s = Get-Settings; $s.LastFolder = $folder; Save-Settings $s
     Update-Total
 }
 
@@ -425,7 +447,7 @@ function Update-Total {
 
 function Set-Busy([bool]$b) {
     $script:busy = $b
-    foreach ($c in @($clbDrives, $btnRefresh, $chkFixed, $btnFolder, $txtLabel, $clbFiles, $btnAll, $btnNone, $chkLock, $chkVerify, $chkEject, $btnStart)) { $c.Enabled = -not $b }
+    foreach ($c in @($clbDrives, $btnRefresh, $chkFixed, $btnFolder, $btnFolderDel, $lstFolders, $txtLabel, $clbFiles, $btnAll, $btnNone, $chkLock, $chkVerify, $chkEject, $btnStart)) { $c.Enabled = -not $b }
 }
 
 function Flush-Log {
@@ -445,10 +467,33 @@ $clbFiles.Add_ItemCheck({ [void]$form.BeginInvoke([Action]{ Update-Total }) })
 
 $btnFolder.Add_Click({
     $dlg = New-Object Windows.Forms.FolderBrowserDialog
-    $dlg.Description = 'Выберите папку работы (её название станет названием флешки)'
-    $start = if ($txtFolder.Text) { $txtFolder.Text } else { (Get-Settings).LastFolder }
+    $dlg.Description = 'Выберите папку (название первой папки станет названием флешки)'
+    $start = if ($script:folders.Count -gt 0) { $script:folders[$script:folders.Count - 1] } else { (Get-Settings).LastFolder }
     if ($start -and (Test-Path -LiteralPath $start)) { $dlg.SelectedPath = $start }
-    if ($dlg.ShowDialog($form) -eq 'OK') { $script:preFiles = @(); Load-Folder $dlg.SelectedPath }
+    if ($dlg.ShowDialog($form) -eq 'OK') { Add-Folder $dlg.SelectedPath }
+})
+
+# перетаскивание папок мышкой в окно
+$form.AllowDrop = $true
+$lstFolders.AllowDrop = $true
+$clbFiles.AllowDrop = $true
+$dragEnter = { param($sender, $e) if (-not $script:busy -and $e.Data.GetDataPresent([Windows.Forms.DataFormats]::FileDrop)) { $e.Effect = 'Copy' } }
+$dragDrop = {
+    param($sender, $e)
+    if ($script:busy) { return }
+    foreach ($x in @($e.Data.GetData([Windows.Forms.DataFormats]::FileDrop))) {
+        if (Test-Path -LiteralPath $x -PathType Container) { Add-Folder $x }
+        elseif (Test-Path -LiteralPath $x -PathType Leaf) { $script:preFiles = @($script:preFiles) + $x; Add-Folder (Split-Path -Parent $x); Reload-Content }
+    }
+}
+foreach ($c in @($form, $lstFolders, $clbFiles)) { $c.Add_DragEnter($dragEnter); $c.Add_DragDrop($dragDrop) }
+
+$btnFolderDel.Add_Click({
+    $i = $lstFolders.SelectedIndex
+    if ($i -lt 0) { Show-Msg 'Нажмите на папку в списке, которую убрать.' | Out-Null; return }
+    $script:folders.RemoveAt($i)
+    if ($i -eq 0 -and $script:folders.Count -gt 0) { $txtLabel.Text = Get-CleanLabel (Split-Path -Leaf $script:folders[0]) }
+    Reload-Content
 })
 
 $btnStart.Add_Click({
@@ -456,16 +501,24 @@ $btnStart.Add_Click({
     $drives = @()
     for ($i = 0; $i -lt $clbDrives.Items.Count; $i++) { if ($clbDrives.GetItemChecked($i)) { $drives += $script:driveObjs[$i] } }
     if ($drives.Count -eq 0) { Show-Msg 'Отметьте хотя бы одну флешку.' 'Warning' | Out-Null; return }
-    $folder = $txtFolder.Text
-    if (-not $folder -or -not (Test-Path -LiteralPath $folder)) { Show-Msg 'Выберите папку работы.' 'Warning' | Out-Null; return }
+    if ($script:folders.Count -eq 0) { Show-Msg 'Добавьте папку работы.' 'Warning' | Out-Null; return }
+    $folder = ($script:folders -join ' + ')
     $sel = @()
     for ($i = 0; $i -lt $clbFiles.Items.Count; $i++) { if ($clbFiles.GetItemChecked($i)) { $sel += $script:fileObjs[$i] } }
     if ($sel.Count -eq 0) { Show-Msg 'Отметьте файлы, которые записать.' 'Warning' | Out-Null; return }
     $label = Get-CleanLabel $txtLabel.Text
     if (-not $label) { Show-Msg 'Напишите название флешки.' 'Warning' | Out-Null; return }
-    $srcLetter = $folder.Substring(0, 1).ToUpper()
-    if ($drives.Letter -contains $srcLetter) {
-        Show-Msg "Папка работы лежит на флешке $($srcLetter): — её нельзя форматировать. Снимите галочку с этой флешки." 'Error' | Out-Null; return
+    foreach ($f in $script:folders) {
+        $srcLetter = $f.Substring(0, 1).ToUpper()
+        if ($drives.Letter -contains $srcLetter) {
+            Show-Msg "Папка «$f» лежит на флешке $($srcLetter): — её нельзя форматировать. Снимите галочку с этой флешки." 'Error' | Out-Null; return
+        }
+    }
+    $names = @{}
+    foreach ($x in $sel) {
+        $nm = $x.Item.Name.ToLower()
+        if ($names.ContainsKey($nm)) { Show-Msg "Два объекта с одинаковым названием «$($x.Item.Name)» из разных папок — на флешке они совпадут. Оставьте один или переименуйте." 'Error' | Out-Null; return }
+        $names[$nm] = $true
     }
     $need = Get-SelectedBytes
     foreach ($d in $drives) {
@@ -574,7 +627,7 @@ $form.Add_Shown({
             Show-Msg "$($l): — это не USB-флешка. Программа работает только с флешками, этот диск не трогаю." 'Warning' | Out-Null
         }
     }
-    if ($preFolder) { Load-Folder $preFolder }
+    if ($preFolders.Count -gt 0) { foreach ($pf in $preFolders) { Add-Folder $pf } }
     elseif ($preDrives.Count -gt 0) { $btnFolder.PerformClick() }
 })
 
