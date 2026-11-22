@@ -98,6 +98,27 @@ enum SelfTest {
         u = dmx()
         check("circle moves pan", u[1]?[99] != 128 || u[1]?[101] != 128)
 
+        // Art-Net poll reply parsing (8-port node, ports 0-3)
+        var reply = [UInt8](repeating: 0, count: 239)
+        for (i, ch) in Array("Art-Net".utf8).enumerated() { reply[i] = ch }
+        reply[9] = 0x21
+        reply[10] = 2; reply[11] = 0; reply[12] = 0; reply[13] = 50
+        for (i, ch) in Array("NODE8".utf8).enumerated() { reply[26 + i] = ch }
+        reply[173] = 4
+        for i in 0..<4 { reply[174 + i] = 0x80; reply[190 + i] = UInt8(i) }
+        let node = ArtNetDiscovery.parseReply(reply)
+        check("artpoll reply", node?.ip == "2.0.0.50" && node?.universes == [0, 1, 2, 3] && node?.name == "NODE8", "\(String(describing: node))")
+
+        // color matrix layer
+        c.clearProgrammer(); c.clearProgrammer()
+        if let g = c.show.groups.first {
+            c.toggleGroupColor(g.id, 6)   // Blue
+            c.selection = []
+            if let id2 = c.show.cuelists.first?.id { c.activate(id2) }
+            u = dmx()
+            check("color matrix blue", u[1]?[3] == 255 && u[1]?[1] == 0, "\(u[1]?[1] ?? 0)/\(u[1]?[3] ?? 0)")
+        }
+
         // save/load round trip
         let data = try? JSONEncoder().encode(c.show)
         let back = data.flatMap { try? JSONDecoder().decode(Show.self, from: $0) }

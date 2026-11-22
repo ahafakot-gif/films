@@ -158,6 +158,9 @@ struct SettingsView: View {
     @EnvironmentObject var c: Console
     @Environment(\.dismiss) private var dismiss
     @State private var ports: [String] = SerialPorts.list()
+    @State private var nodes: [ArtNode] = []
+    @State private var searching = false
+    @State private var searched = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -242,6 +245,50 @@ struct SettingsView: View {
 
             Divider()
             HStack {
+                Text("Art-Net").font(.headline)
+                Text("Mac: " + ArtNetDiscovery.interfaces().map { "\($0.iface.name) \($0.iface.ip)" }.joined(separator: " · "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                Spacer()
+                if searching { ProgressView().controlSize(.small) }
+                Button {
+                    searching = true
+                    Task {
+                        nodes = await ArtNetDiscovery.discover()
+                        searching = false
+                        searched = true
+                    }
+                } label: { Label(c.t("an.search"), systemImage: "antenna.radiowaves.left.and.right") }
+                .disabled(searching)
+            }
+            if searched && nodes.isEmpty {
+                Text(c.t("an.none")).font(.caption).foregroundStyle(.orange)
+            }
+            ForEach(nodes) { n in
+                HStack(spacing: 12) {
+                    Image(systemName: "network").foregroundStyle(.green)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("\(n.name.isEmpty ? "Art-Net node" : n.name)  ·  \(n.ip)").font(.callout.bold())
+                        Text("\(c.t("an.universes")): \(n.universes.map(String.init).joined(separator: ", "))  \(n.longName)")
+                            .font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                    }
+                    Spacer()
+                    Menu(c.t("an.create")) {
+                        Button(c.t("an.createFrom0")) { makeOutputs(n, firstArt: 0) }
+                        Button(c.t("an.createFrom1")) { makeOutputs(n, firstArt: 1) }
+                        if !n.universes.isEmpty {
+                            Button(c.t("an.createNode")) { makeOutputs(n, firstArt: nil) }
+                        }
+                    }
+                    .frame(width: 220)
+                }
+                .padding(8)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.green.opacity(0.08)))
+            }
+
+            Divider()
+            HStack {
                 Text("MIDI").font(.headline)
                 Text(c.midiDevices.isEmpty ? c.t("midi.noDevices") : c.midiDevices.joined(separator: ", "))
                     .font(.caption)
@@ -267,7 +314,28 @@ struct SettingsView: View {
             .foregroundStyle(.secondary)
         }
         .padding(20)
-        .frame(width: 980, height: 640)
+        .frame(width: 980, height: 760)
         .onChange(of: c.show.outputs) { _ in c.applyOutputs() }
+    }
+
+    /// Replace outputs with universes 1…8 sent to this node.
+    private func makeOutputs(_ n: ArtNode, firstArt: Int?) {
+        var outs: [OutputConfig] = []
+        let count = max(8, n.universes.count)
+        for i in 0..<count {
+            var o = OutputConfig()
+            o.universe = i + 1
+            o.type = .artnet
+            o.ip = n.ip
+            if let f = firstArt {
+                o.artUniverse = f + i
+            } else {
+                o.artUniverse = i < n.universes.count ? n.universes[i] : (n.universes.last ?? 0) + i - n.universes.count + 1
+            }
+            outs.append(o)
+        }
+        c.show.outputs = outs
+        c.applyOutputs()
+        c.flash(c.t("an.done"))
     }
 }
