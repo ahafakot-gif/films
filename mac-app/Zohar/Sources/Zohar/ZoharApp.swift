@@ -35,6 +35,15 @@ struct ZoharApp: App {
                 .onAppear { AppDelegate.console = console }
         }
         .defaultSize(width: 1500, height: 920)
+
+        Window("Zohar 2", id: "second") {
+            SecondScreenView()
+                .environmentObject(console)
+                .environment(\.layoutDirection, console.lang == .he ? .rightToLeft : .leftToRight)
+                .preferredColorScheme(console.theme.scheme)
+                .frame(minWidth: 700, minHeight: 600)
+        }
+        .defaultSize(width: 1200, height: 900)
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button(console.t("menu.new")) { console.newShow() }
@@ -51,6 +60,7 @@ struct ZoharApp: App {
 
 struct MainView: View {
     @EnvironmentObject var c: Console
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(spacing: 0) {
@@ -59,15 +69,23 @@ struct MainView: View {
             HStack(spacing: 0) {
                 PlaybackGrid()
                     .frame(minWidth: 640, maxWidth: .infinity)
-                Divider()
-                SidePanel()
-                    .frame(minWidth: 500, idealWidth: 580, maxWidth: 680)
+                if !(c.secondScreenOpen && c.secondMode == 0) {
+                    Divider()
+                    SidePanel()
+                        .frame(minWidth: 500, idealWidth: 580, maxWidth: 680)
+                }
             }
             Divider()
             FaderBank()
                 .frame(height: 220)
         }
         .background(Color(nsColor: .windowBackgroundColor))
+        .onAppear {
+            // Two monitors connected: open the second screen automatically.
+            if NSScreen.screens.count > 1 && !c.secondScreenOpen {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { openWindow(id: "second") }
+            }
+        }
         .sheet(item: $c.sheet) { kind in
             switch kind {
             case .patch: PatchView().environmentObject(c)
@@ -82,6 +100,7 @@ struct MainView: View {
 
 struct TopBar: View {
     @EnvironmentObject var c: Console
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         HStack(spacing: 10) {
@@ -139,6 +158,8 @@ struct TopBar: View {
             }
             .help(c.outputOK ? c.t("out.ok") : c.t("out.none"))
 
+            Button { openWindow(id: "second") } label: { Label(c.t("ui.screen2"), systemImage: "rectangle.on.rectangle") }
+                .help(c.t("ui.screen2help"))
             Button { c.sheet = .patch } label: { Label("Patch", systemImage: "cable.connector") }
             Button { c.sheet = .settings } label: { Image(systemName: "gearshape") }
         }
@@ -166,4 +187,64 @@ struct BarButton: View {
         }
         .buttonStyle(.plain)
     }
+}
+
+// MARK: - Second screen
+
+struct SecondScreenView: View {
+    @EnvironmentObject var c: Console
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                Picker("", selection: $c.secondMode) {
+                    Text(c.t("s2.programmer")).tag(0)
+                    Text(c.t("s2.buttons")).tag(1)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .frame(width: 340)
+                if c.secondMode == 1 {
+                    HStack(spacing: 4) {
+                        Button { c.page2 = (c.page2 - 1 + Console.pages) % Console.pages } label: { Image(systemName: "chevron.left") }
+                        Text("\(c.t("ui.page")) \(c.page2 + 1)").font(.callout.bold()).frame(minWidth: 70)
+                        Button { c.page2 = (c.page2 + 1) % Console.pages } label: { Image(systemName: "chevron.right") }
+                    }
+                    .buttonStyle(.borderless)
+                }
+                Spacer()
+                BarButton(title: "Blackout", icon: "moon.fill", on: c.blackout, color: .red) { c.blackout.toggle() }
+                BarButton(title: "Record", icon: "record.circle", on: c.recordMode, color: .red) { c.recordMode.toggle() }
+                BarButton(title: "Clear", icon: "xmark.circle", on: !c.programmerEmpty, color: .orange) { c.clearProgrammer() }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            Divider()
+            if c.secondMode == 0 {
+                SidePanel()
+            } else {
+                PlaybackGrid(page: c.page2)
+            }
+        }
+        .background(WindowPlacer())
+        .onAppear { c.secondScreenOpen = true }
+        .onDisappear { c.secondScreenOpen = false }
+    }
+}
+
+/// Moves the window to the other monitor (if there is one) and fills it.
+struct WindowPlacer: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let v = NSView()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            guard let w = v.window, NSScreen.screens.count > 1 else { return }
+            let mainScreen = NSApp.windows.first { $0 !== w && $0.isVisible && $0.title == "Zohar" }?.screen ?? NSScreen.main
+            if let other = NSScreen.screens.first(where: { $0 !== mainScreen }) {
+                w.setFrame(other.visibleFrame, display: true)
+            }
+        }
+        return v
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }

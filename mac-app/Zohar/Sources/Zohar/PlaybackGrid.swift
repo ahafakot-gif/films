@@ -2,13 +2,14 @@ import SwiftUI
 
 struct PlaybackGrid: View {
     @EnvironmentObject var c: Console
+    var page: Int? = nil
 
     var body: some View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: Console.cols)
         ScrollView {
             LazyVGrid(columns: columns, spacing: 6) {
                 ForEach(0..<(Console.cols * Console.rows), id: \.self) { slot in
-                    SlotButton(slot: slot)
+                    SlotButton(slot: slot, page: page)
                 }
             }
             .padding(10)
@@ -20,10 +21,11 @@ struct PlaybackGrid: View {
 struct SlotButton: View {
     @EnvironmentObject var c: Console
     let slot: Int
+    var page: Int? = nil
     @State private var pressed = false
 
     var body: some View {
-        let cl = c.cuelistAt(slot: slot)
+        let cl = c.cuelistAt(slot: slot, page: page)
         let active = cl.map { c.isActive($0.id) } ?? false
         let color = cl.map { Palette.color($0.colorIndex) } ?? Color.gray
         let st = cl.flatMap { c.states[$0.id] }
@@ -97,15 +99,15 @@ struct SlotButton: View {
                 }
                 Divider()
                 Button(c.t("cl.release")) { c.release(cl.id) }
-                Button(c.t("cl.removeButton")) { c.show.buttons[c.buttonKey(slot)] = nil }
+                Button(c.t("cl.removeButton")) { c.show.buttons[c.buttonKey(slot, page: page)] = nil }
                 Button(c.t("cl.delete"), role: .destructive) { c.deleteCuelist(cl.id) }
             } else {
-                Button(c.t("cl.recordHere")) { c.record(toSlot: slot) }
+                Button(c.t("cl.recordHere")) { c.record(toSlot: slot, page: page) }
                     .disabled(c.programmerEmpty)
                 if !c.show.cuelists.isEmpty {
                     Menu(c.t("cl.placeExisting")) {
                         ForEach(c.show.cuelists) { l in
-                            Button(l.name) { c.show.buttons[c.buttonKey(slot)] = l.id }
+                            Button(l.name) { c.show.buttons[c.buttonKey(slot, page: page)] = l.id }
                         }
                     }
                 }
@@ -115,7 +117,7 @@ struct SlotButton: View {
 
     private func down(_ cl: Cuelist?) {
         if c.recordMode {
-            c.record(toSlot: slot)
+            c.record(toSlot: slot, page: page)
         } else if let cl {
             c.buttonDown(cl.id)
         }

@@ -19,6 +19,10 @@ enum Strings {
         "menu.open": ("Открыть шоу…", "פתיחת מופע…", "Open show…"),
         "menu.saveAs": ("Сохранить шоу как…", "שמירת מופע בשם…", "Save show as…"),
 
+        "ui.screen2": ("Экран 2", "מסך 2", "Screen 2"),
+        "ui.screen2help": ("Открыть окно для второго монитора", "פתיחת חלון למסך השני", "Open a window for the second monitor"),
+        "s2.programmer": ("Группы и программер", "קבוצות ופרוגרמר", "Groups & programmer"),
+        "s2.buttons": ("Кнопки", "כפתורים", "Buttons"),
         "ui.page": ("Страница", "עמוד", "Page"),
         "ui.name": ("Название", "שם", "Name"),
         "ui.done": ("Готово", "סיום", "Done"),

@@ -53,6 +53,9 @@ final class Console: ObservableObject {
     @Published var message: String? = nil
     @Published var outputOK = false
     @Published var sheet: SheetKind? = nil
+    @Published var secondScreenOpen = false
+    @Published var secondMode = 0      // 0 = groups + programmer, 1 = playback page
+    @Published var page2 = 1
 
     @Published var lang: Lang { didSet { UserDefaults.standard.set(lang.rawValue, forKey: "lang") } }
     @Published var theme: Theme { didSet { UserDefaults.standard.set(theme.rawValue, forKey: "theme") } }
@@ -74,7 +77,8 @@ final class Console: ObservableObject {
     init() {
         let savedLang = UserDefaults.standard.string(forKey: "lang").flatMap(Lang.init(rawValue:))
         let sys = Locale.preferredLanguages.first ?? "ru"
-        lang = savedLang ?? (sys.hasPrefix("he") ? .he : (sys.hasPrefix("en") ? .en : .ru))
+        _ = sys
+        lang = savedLang ?? .he
         theme = UserDefaults.standard.string(forKey: "theme").flatMap(Theme.init(rawValue:)) ?? .dark
         show = Console.loadAutosave() ?? Show()
         resetFaderLevels()
@@ -101,8 +105,8 @@ final class Console: ObservableObject {
     func group(_ id: UUID) -> FixtureGroup? { show.groups.first { $0.id == id } }
 
     func buttonKey(_ slot: Int, page p: Int? = nil) -> Int { (p ?? page) * 1000 + slot }
-    func cuelistAt(slot: Int) -> Cuelist? {
-        guard let id = show.buttons[buttonKey(slot)] else { return nil }
+    func cuelistAt(slot: Int, page p: Int? = nil) -> Cuelist? {
+        guard let id = show.buttons[buttonKey(slot, page: p)] else { return nil }
         return cuelist(id)
     }
 
@@ -579,10 +583,10 @@ final class Console: ObservableObject {
     }
 
     /// Record into a button slot: new cuelist, or append a cue to the existing one.
-    func record(toSlot slot: Int) {
+    func record(toSlot slot: Int, page p: Int? = nil) {
         defer { recordMode = false }
         guard !programmerEmpty else { flash(t("msg.programmerEmpty")); return }
-        let key = buttonKey(slot)
+        let key = buttonKey(slot, page: p)
         if let id = show.buttons[key], let ci = cuelistIndex(id) {
             let n = show.cuelists[ci].cues.count + 1
             show.cuelists[ci].cues.append(newCue(number: n))
