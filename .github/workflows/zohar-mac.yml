@@ -1,0 +1,50 @@
+name: Zohar Mac app
+
+on:
+  push:
+    paths:
+      - 'mac-app/Zohar/**'
+      - '.github/workflows/zohar-mac.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    env:
+      VERSION: 0.1.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            mac-app
+            .github
+
+      - name: Build app and DMG
+        run: ./mac-app/Zohar/build.sh
+
+      - name: Self test (engine + DMX values)
+        run: ZOHAR_SELFTEST=1 mac-app/Zohar/dist/Zohar.app/Contents/MacOS/Zohar
+
+      - name: Smoke test (window starts)
+        run: |
+          APP=mac-app/Zohar/dist/Zohar.app/Contents/MacOS/Zohar
+          "$APP" & PID=$!
+          sleep 8
+          if kill -0 $PID 2>/dev/null; then echo "App is running"; kill $PID; else echo "App exited early"; wait $PID; exit 1; fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zohar-${{ env.VERSION }}
+          path: mac-app/Zohar/dist/Zohar-${{ env.VERSION }}.dmg
+
+      - name: Publish download (release)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "zohar-v$VERSION" "mac-app/Zohar/dist/Zohar-$VERSION.dmg" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "Zohar $VERSION (Mac lighting console)" \
+            --notes "Zohar — пульт света для Mac (Enttec USB Pro / Open DMX / Art-Net). Скачайте .dmg, перетащите Zohar в «Программы». Первый запуск: правый клик → Открыть."
